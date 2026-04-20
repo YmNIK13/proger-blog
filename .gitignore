@@ -6,12 +6,18 @@ web/app/plugins/*
 # Ignore Composer-installed mu-plugin directories; single-file mu-plugins are tracked intentionally
 web/app/mu-plugins/*/
 web/app/themes/twentytwentyfive/
+web/app/themes/twentytwentyfour/
+web/app/themes/twentytwentythree
 web/app/upgrade
 web/app/uploads/*
+web/app/languages/*
 !web/app/uploads/.gitkeep
 web/app/cache/*
+web/app/advanced-headers.php
+web/app/wp-cache-config.php
 
 # WordPress
+web/.user.ini
 web/wp
 web/.htaccess
 
