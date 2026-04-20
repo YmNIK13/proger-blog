@@ -22,6 +22,60 @@ function existsFile(p) {
   }
 }
 
+function existsDir(p) {
+  try {
+    return fs.statSync(p).isDirectory();
+  } catch {
+    return false;
+  }
+}
+
+function resolveWpCliPath(inputPath) {
+  if (!inputPath) return null;
+
+  const absPath = path.resolve(inputPath);
+
+  if (existsDir(path.join(absPath, "web", "wp"))) {
+    return path.join(absPath, "web", "wp");
+  }
+
+  if (existsDir(path.join(absPath, "wp")) && existsFile(path.join(absPath, "index.php"))) {
+    return path.join(absPath, "wp");
+  }
+
+  return absPath;
+}
+
+function resolveContentDir(inputPath, wpCliPath) {
+  const candidates = [];
+
+  if (inputPath) {
+    const absPath = path.resolve(inputPath);
+    candidates.push(path.join(absPath, "web", "app"));
+    candidates.push(path.join(absPath, "app"));
+    candidates.push(path.join(absPath, "wp-content"));
+  }
+
+  if (wpCliPath) {
+    candidates.push(path.join(wpCliPath, "..", "app"));
+    candidates.push(path.join(wpCliPath, "wp-content"));
+  }
+
+  if (!inputPath) {
+    const cwd = process.cwd();
+    candidates.push(path.join(cwd, "web", "app"));
+    candidates.push(path.join(cwd, "app"));
+    candidates.push(path.join(cwd, "wp-content"));
+  }
+
+  for (const candidate of candidates) {
+    const normalized = path.resolve(candidate);
+    if (existsDir(normalized)) return normalized;
+  }
+
+  return null;
+}
+
 function runWp(cmdArgs, { pathArg, urlArg, allowRoot }) {
   const args = [];
   if (allowRoot) args.push("--allow-root");
@@ -48,9 +102,11 @@ function canRun(report, result, noteIfNotOk) {
 
 function main() {
   const opts = parseArgs(process.argv.slice(2));
+  const resolvedPath = resolveWpCliPath(opts.path);
+  const contentDir = resolveContentDir(opts.path, resolvedPath);
   const report = {
     tool: { name: "perf_inspect", version: TOOL_VERSION },
-    target: { path: opts.path, url: opts.url },
+    target: { path: opts.path, resolvedPath, contentDir, url: opts.url },
     wpCli: { available: false },
     wp: {
       isInstalled: null,
@@ -80,28 +136,28 @@ function main() {
     return;
   }
 
-  const isInstalled = runWp(["core", "is-installed"], { pathArg: opts.path, urlArg: opts.url, allowRoot: opts.allowRoot });
+  const isInstalled = runWp(["core", "is-installed"], { pathArg: resolvedPath, urlArg: opts.url, allowRoot: opts.allowRoot });
   report.wp.isInstalled = isInstalled.ok;
-  canRun(report, isInstalled, "WordPress not detected at the given --path/--url (check wp-config.php and targeting).");
+  canRun(report, isInstalled, "WordPress not detected at the given --path/--url (check wp-config.php, wp-cli.yml, and Bedrock targeting).");
   if (!isInstalled.ok) {
     process.stdout.write(`${JSON.stringify(report, null, 2)}\n`);
     return;
   }
 
-  const coreVersion = runWp(["core", "version"], { pathArg: opts.path, urlArg: opts.url, allowRoot: opts.allowRoot });
+  const coreVersion = runWp(["core", "version"], { pathArg: resolvedPath, urlArg: opts.url, allowRoot: opts.allowRoot });
   report.wp.coreVersion = coreVersion.ok ? coreVersion.stdout : null;
   canRun(report, coreVersion);
 
-  const doctorHelp = runWp(["doctor", "--help"], { pathArg: opts.path, urlArg: opts.url, allowRoot: opts.allowRoot });
+  const doctorHelp = runWp(["doctor", "--help"], { pathArg: resolvedPath, urlArg: opts.url, allowRoot: opts.allowRoot });
   report.commands.doctor.available = doctorHelp.ok;
   canRun(report, doctorHelp);
 
-  const profileHelp = runWp(["profile", "--help"], { pathArg: opts.path, urlArg: opts.url, allowRoot: opts.allowRoot });
+  const profileHelp = runWp(["profile", "--help"], { pathArg: resolvedPath, urlArg: opts.url, allowRoot: opts.allowRoot });
   report.commands.profile.available = profileHelp.ok;
   canRun(report, profileHelp);
 
   const autoloadBytes = runWp(["option", "list", "--autoload=on", "--format=total_bytes"], {
-    pathArg: opts.path,
+    pathArg: resolvedPath,
     urlArg: opts.url,
     allowRoot: opts.allowRoot,
   });
@@ -110,12 +166,11 @@ function main() {
   }
   canRun(report, autoloadBytes);
 
-  if (opts.path) {
-    const wpContent = path.join(opts.path, "wp-content");
-    report.perfSignals.hasObjectCacheDropin = existsFile(path.join(wpContent, "object-cache.php"));
-    report.perfSignals.hasAdvancedCacheDropin = existsFile(path.join(wpContent, "advanced-cache.php"));
-    report.perfSignals.hasQueryMonitorPlugin = existsFile(path.join(wpContent, "plugins", "query-monitor", "query-monitor.php"));
-    report.perfSignals.hasPerformanceLabPlugin = existsFile(path.join(wpContent, "plugins", "performance-lab", "load.php"));
+  if (contentDir) {
+    report.perfSignals.hasObjectCacheDropin = existsFile(path.join(contentDir, "object-cache.php"));
+    report.perfSignals.hasAdvancedCacheDropin = existsFile(path.join(contentDir, "advanced-cache.php"));
+    report.perfSignals.hasQueryMonitorPlugin = existsFile(path.join(contentDir, "plugins", "query-monitor", "query-monitor.php"));
+    report.perfSignals.hasPerformanceLabPlugin = existsFile(path.join(contentDir, "plugins", "performance-lab", "load.php"));
   }
 
   if (!report.commands.doctor.available) report.notes.push("Tip: install WP-CLI doctor: `wp package install wp-cli/doctor-command`.");
@@ -125,4 +180,3 @@ function main() {
 }
 
 main();
-

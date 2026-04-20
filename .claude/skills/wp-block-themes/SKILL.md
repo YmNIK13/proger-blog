@@ -19,19 +19,21 @@ Use this skill for block theme work such as:
 ## Inputs required
 
 - Repo root and which theme is targeted (theme directory if multiple exist).
+- In Bedrock repos, theme roots usually live under `web/app/themes/<theme>`.
 - Target WordPress version range (theme.json version and features vary by core version).
 - Where the issue manifests: Site Editor, post editor, frontend, or all.
 
 ## Procedure
 
-### 0) Triage and locate block theme roots
+### 0) Inspect layout and locate block theme roots
 
-1. Run triage:
-   - `node skills/wp-project-triage/scripts/detect_wp_project.mjs`
+1. Inspect the repo layout:
+   - Bedrock/full site signals: `composer.json`, `config/application.php`, `web/app/`, `web/wp/`, `web/wp-config.php`, `wp-cli.yml`
+   - Classic full site signals: root `wp-config.php`, `wp-content/`
 2. Detect theme roots + key folders:
-   - `node skills/wp-block-themes/scripts/detect_block_themes.mjs`
+   - `node .agents/skills/wp-block-themes/scripts/detect_block_themes.mjs`
 
-If multiple themes exist, pick one and scope all changes to that theme root.
+If multiple themes exist, pick one and scope all changes to that theme root. In this repo, that usually means `web/app/themes/<theme>`.
 
 ### 1) Create a new block theme (if needed)
 
@@ -39,6 +41,7 @@ If you are creating a new block theme from scratch (or converting a classic them
 
 - Prefer starting from a known-good scaffold (or exporting from a WP environment) rather than guessing file layout.
 - Be explicit about the minimum supported WordPress version because `theme.json` schema versions differ.
+- In Bedrock site repos, create the theme under `web/app/themes/`.
 
 Read:
 - `references/creating-new-block-theme.md`

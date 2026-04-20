@@ -20,20 +20,22 @@ Use this skill for block work such as:
 ## Inputs required
 
 - Repo root and target (plugin vs theme vs full site).
+- In Bedrock repos, blocks usually live under `web/app/plugins/`, `web/app/mu-plugins/`, or `web/app/themes/`.
 - The block name/namespace and where it lives (path to `block.json` if known).
 - Target WordPress version range (especially if using modules / `viewScriptModule`).
 
 ## Procedure
 
-### 0) Triage and locate blocks
+### 0) Inspect layout and locate blocks
 
-1. Run triage:
-   - `node skills/wp-project-triage/scripts/detect_wp_project.mjs`
+1. Inspect the repo layout:
+   - Bedrock/full site signals: `composer.json`, `config/application.php`, `web/app/`, `web/wp/`, `web/wp-config.php`, `wp-cli.yml`
+   - Classic full site signals: root `wp-config.php`, `wp-content/`
 2. List blocks (deterministic scan):
-   - `node skills/wp-block-development/scripts/list_blocks.mjs`
+   - `node .agents/skills/wp-block-development/scripts/list_blocks.mjs`
 3. Identify the block root (directory containing `block.json`) you’re changing.
 
-If this repo is a full site (`wp-content/` present), be explicit about *which* plugin/theme contains the block.
+If this repo is a full site, be explicit about *which* plugin/theme contains the block. In Bedrock that is usually under `web/app/plugins/`, `web/app/mu-plugins/`, or `web/app/themes/`.
 
 ### 1) Create a new block (if needed)
 
@@ -49,6 +51,7 @@ After scaffolding:
 
 1. Re-run the block list script and confirm the new block root.
 2. Continue with the remaining steps (model choice, metadata, registration, serialization).
+3. In Bedrock site repos, scaffold inside the chosen plugin or theme under `web/app/...`, not at the repository root.
 
 ### 2) Ensure apiVersion 3 (WordPress 6.9+)
 
@@ -156,7 +159,7 @@ Read:
 - Saving + reloading does not create “Invalid block”.
 - Frontend output matches expectations (static: saved markup; dynamic: server output).
 - Assets load where expected (editor vs frontend).
-- Run the repo’s lint/build/tests that triage recommends.
+- Run the repo’s lint/build/tests that match the tooling you found.
 
 ## Failure modes / debugging
 

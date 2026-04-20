@@ -20,23 +20,25 @@ Use this skill when you need to:
 ## Inputs required
 
 - Repo root + target plugin/theme/mu-plugin (path to entrypoint).
+- In Bedrock repos, that target usually lives under `web/app/plugins/`, `web/app/mu-plugins/`, or `web/app/themes/`.
 - Desired namespace + version (e.g. `my-plugin/v1`) and routes.
 - Authentication mode (cookie + nonce vs application passwords vs auth plugin).
 - Target WordPress version constraints (if below 6.9, call out).
 
 ## Procedure
 
-### 0) Triage and locate REST usage
+### 0) Inspect layout and locate REST usage
 
-1. Run triage:
-   - `node skills/wp-project-triage/scripts/detect_wp_project.mjs`
+1. Inspect the repo layout:
+   - Bedrock/full site signals: `composer.json`, `config/application.php`, `web/app/`, `web/wp/`, `web/wp-config.php`, `wp-cli.yml`
+   - Classic full site signals: root `wp-config.php`, `wp-content/`
 2. Search for existing REST usage:
    - `register_rest_route`
    - `WP_REST_Controller`
    - `rest_api_init`
    - `show_in_rest`, `rest_base`, `rest_controller_class`
 
-If this is a full site repo, pick the specific plugin/theme before changing code.
+If this is a full site repo, pick the specific plugin/theme/mu-plugin before changing code. In Bedrock, scope that work to `web/app/...`.
 
 ### 1) Choose the right approach
 

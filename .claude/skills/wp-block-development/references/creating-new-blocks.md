@@ -37,10 +37,9 @@ References:
 
 If you cannot run `create-block` (no Node tooling or restricted network):
 
-1. Create a plugin or theme location that will register the block.
+1. Create a plugin or theme location that will register the block. In Bedrock site repos, that usually means `web/app/plugins/<plugin>`, `web/app/mu-plugins/<plugin>`, or `web/app/themes/<theme>`.
 2. Create a block folder with a valid `block.json`.
 3. Register via `register_block_type_from_metadata()` in PHP.
 4. Add editor JS and (optionally) frontend view assets.
 
 Then follow the rest of `wp-block-development` for metadata, registration, and serialization.
-

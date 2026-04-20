@@ -4,7 +4,7 @@
 
 - Confirm correct plugin main file and header.
 - Check PHP error logs and `WP_DEBUG_LOG`.
-- If the repo is a site repo, confirm you edited the correct plugin under `wp-content/plugins/`.
+- If the repo is a site repo, confirm you edited the correct plugin under `web/app/plugins/` or `web/app/mu-plugins/` in Bedrock, or `wp-content/plugins/` in a classic layout.
 
 ## Activation hook surprises
 
@@ -16,4 +16,3 @@
 - Confirm `register_setting()` is called.
 - Confirm the option group matches the form.
 - Confirm capability checks and nonces.
-

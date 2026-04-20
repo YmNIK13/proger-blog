@@ -14,6 +14,7 @@ Use this file when you need to create a new block theme or convert a theme to bl
      - `theme.json` (global settings/styles)
      - `templates/index.html` (minimum viable template)
      - `parts/header.html` and `parts/footer.html` (recommended)
+   - In Bedrock site repos, create that folder under `web/app/themes/<theme>`.
 
 ## References
 
@@ -34,4 +35,3 @@ References:
   - https://developer.wordpress.org/themes/global-settings-and-styles/introduction-to-theme-json/
 - Theme.json version 3 dev note:
   - https://make.wordpress.org/core/2024/06/19/theme-json-version-3/
-

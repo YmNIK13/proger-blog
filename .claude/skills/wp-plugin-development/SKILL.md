@@ -20,19 +20,21 @@ Use this skill for plugin work such as:
 ## Inputs required
 
 - Repo root + target plugin(s) (path to plugin main file if known).
+- In Bedrock repos, plugins usually live under `web/app/plugins/<name>` or `web/app/mu-plugins/<name>`.
 - Where this plugin runs: single site vs multisite; WP.com conventions if applicable.
 - Target WordPress + PHP versions (affects available APIs and placeholder support in `$wpdb->prepare()`).
 
 ## Procedure
 
-### 0) Triage and locate plugin entrypoints
+### 0) Inspect layout and locate plugin entrypoints
 
-1. Run triage:
-   - `node skills/wp-project-triage/scripts/detect_wp_project.mjs`
+1. Inspect the repo layout:
+   - Bedrock/full site signals: `composer.json`, `config/application.php`, `web/app/`, `web/wp/`, `web/wp-config.php`, `wp-cli.yml`
+   - Classic full site signals: root `wp-config.php`, `wp-content/`
 2. Detect plugin headers (deterministic scan):
-   - `node skills/wp-plugin-development/scripts/detect_plugins.mjs`
+   - `node .agents/skills/wp-plugin-development/scripts/detect_plugins.mjs`
 
-If this is a full site repo, pick the specific plugin under `wp-content/plugins/` or `mu-plugins/` before changing code.
+If this is a full site repo, pick the specific plugin under `web/app/plugins/` or `web/app/mu-plugins/` in Bedrock, or `wp-content/plugins/` / `mu-plugins/` in a classic layout, before changing code.
 
 ### 1) Follow a predictable architecture
 
@@ -42,6 +44,7 @@ Guidelines:
 - Avoid heavy side effects at file load time; load on hooks.
 - Prefer a dedicated loader/class to register hooks.
 - Keep admin-only code behind `is_admin()` (or admin hooks) to reduce frontend overhead.
+- In Bedrock sites, keep plugin code inside `web/app/...`; treat `web/wp` as Composer-managed core and avoid editing it directly.
 
 See:
 - `references/structure.md`

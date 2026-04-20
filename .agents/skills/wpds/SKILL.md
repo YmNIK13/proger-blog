@@ -46,6 +46,7 @@ Before working on any WPDS-related tasks, make sure you read relevant documentat
 ### Tech stack
 
 - Unless you are told otherwise (or gathered specific information from the local context of the request), assume the following tech stack: TypeScript, React, CSS.
+- In this Bedrock repo, UI code usually lives under `web/app/themes/`, `web/app/plugins/`, or `web/app/mu-plugins/`; do not assume a root `wp-content/`.
 
 ### Validation
 

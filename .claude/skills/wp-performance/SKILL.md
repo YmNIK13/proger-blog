@@ -20,8 +20,10 @@ This skill assumes the agent cannot use a browser UI. Prefer WP-CLI, logs, and H
 
 - Environment and safety: dev/staging/prod, any restrictions (no writes, no plugin installs).
 - How to target the install:
-  - WP root `--path=<path>`
+  - In this Bedrock repo, prefer running from the repo root so `wp-cli.yml` supplies `path: web/wp` and `server.docroot: web`, or pass `--path=web/wp` explicitly
+  - Classic installs may still use a docroot `--path=<path>`
   - (multisite/site targeting) `--url=<url>`
+- Bedrock note: content code, plugins, mu-plugins, themes, and cache drop-ins live under `web/app`.
 - The performance symptom and scope:
   - which URL/REST route/admin screen
   - when it happens (always vs sporadic; logged-in vs logged-out)
@@ -42,7 +44,7 @@ Read:
 
 Run:
 
-- `node skills/wp-performance/scripts/perf_inspect.mjs --path=<path> [--url=<url>]`
+- `node .agents/skills/wp-performance/scripts/perf_inspect.mjs --path=<repo-root-or-web/wp> [--url=<url>]`
 
 This detects:
 

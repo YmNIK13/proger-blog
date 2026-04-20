@@ -14,9 +14,13 @@
 
 - `npx @wp-playground/cli@latest server [--port=9400] [--auto-mount] [--wp=<ver>] [--php=<ver>] [--verbosity=debug] [--blueprint=<url-or-path>]`
 - Mounts:
-  - `--auto-mount` (detect plugin/theme in CWD)
+  - `--auto-mount` (detect plugin/theme in CWD; for Bedrock, run it from `web/app/plugins/<plugin>`, `web/app/mu-plugins/<plugin>`, or `web/app/themes/<theme>`)
   - `--mount=/abs/host:/vfs/path` (repeatable)
   - `--mount-before-install` (apply mounts before WP install)
+- Bedrock site roots:
+  - `--mount=/abs/repo/web/app/plugins:/wordpress/wp-content/plugins`
+  - `--mount=/abs/repo/web/app/mu-plugins:/wordpress/wp-content/mu-plugins`
+  - `--mount=/abs/repo/web/app/themes:/wordpress/wp-content/themes`
 
 ### Run a blueprint
 

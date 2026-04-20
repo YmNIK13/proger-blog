@@ -17,7 +17,7 @@ compatibility: "Targets WordPress 6.9+ (PHP 7.2.24+). Playground CLI requires No
 ## Inputs required
 
 - Host machine readiness: Node.js ≥ 20.18, `npm`/`npx` available.
-- Project path to mount (`--auto-mount` or explicit mount mapping).
+- Project path to mount (`--auto-mount` from a concrete plugin/theme root, or explicit mount mapping for Bedrock site roots).
 - Desired WP version/PHP version (optional; defaults to latest WP, PHP 8.3).
 - Blueprint location/URL if running a blueprint.
 - Port preference if 9400 conflicts.
@@ -30,20 +30,28 @@ compatibility: "Targets WordPress 6.9+ (PHP 7.2.24+). Playground CLI requires No
 - Playground instances are ephemeral and SQLite-backed; **never** point at production data.
 - Confirm Node ≥ 20.18 (`node -v`) before running CLI.
 - If mounting local code, ensure it is clean of secrets; Playground copies files into an in-memory FS.
+- In Bedrock repos, `--auto-mount` works from a specific plugin or theme directory under `web/app/...`; from the repo root, prefer explicit `--mount` mappings because Playground expects classic `/wordpress/wp-content/...` paths.
 
 ### 1) Quick local spin-up (auto-mount)
 
 ```bash
-cd <plugin-or-theme-root>
+cd web/app/plugins/<plugin>
+# or: cd web/app/mu-plugins/<plugin>
+# or: cd web/app/themes/<theme>
 npx @wp-playground/cli@latest server --auto-mount
 ```
 - Opens on http://localhost:9400 by default. Auto-detects plugin/theme and installs it.
 - Add `--wp=<version>` / `--php=<version>` as needed.
 - For classic full installs already present, add `--skip-wordpress-setup` and mount the whole tree.
+- For Bedrock full site repos, do not auto-mount from the repo root; map `web/app/*` into Playground’s `/wordpress/wp-content/*` paths instead.
 
 ### 2) Manual mounts or multiple mounts
 
 - Use `--mount=/host/path:/vfs/path` (repeatable) when auto-mount is insufficient (multi-plugin, mu-plugins, custom content).
+- For Bedrock repo roots, common mappings are:
+  - `--mount=$PWD/web/app/plugins:/wordpress/wp-content/plugins`
+  - `--mount=$PWD/web/app/mu-plugins:/wordpress/wp-content/mu-plugins`
+  - `--mount=$PWD/web/app/themes:/wordpress/wp-content/themes`
 - Mount before install with `--mount-before-install` for bootstrapping installer flows.
 - Reference: `references/cli-commands.md`
 

@@ -10,7 +10,7 @@
 - For mount issues:
   - Prefer absolute paths in `--mount`.
   - Use `--mount-before-install` when installer steps need files present early.
+  - In Bedrock repos, verify you mounted `web/app/plugins`, `web/app/mu-plugins`, or `web/app/themes` into `/wordpress/wp-content/...` rather than mounting the repo root blindly.
 - To inspect runtime state:
   - Open the Playground browser console; the Service Worker logs network/FS events.
   - Use the “Terminal” tab (if available) to run WP-CLI inside the instance.
-

@@ -5,7 +5,9 @@ Use this file when profiling indicates repeated queries or low cache hit rate.
 ## Concepts
 
 - Default WP object cache is per-request memory only.
-- A persistent object cache “drop-in” (`wp-content/object-cache.php`) can persist cache across requests.
+- A persistent object cache “drop-in” can persist cache across requests:
+  - classic layout: `wp-content/object-cache.php`
+  - Bedrock layout: `web/app/object-cache.php`
 
 WP-CLI cache commands:
 
@@ -21,4 +23,3 @@ Guardrails:
 - Cache expensive computed results (transients or object cache) with explicit invalidation.
 - Avoid unbounded caches (set expirations or implement invalidation hooks).
 - If adding a persistent object cache, coordinate with infra (Redis/Memcached) and test cache flush behavior.
-

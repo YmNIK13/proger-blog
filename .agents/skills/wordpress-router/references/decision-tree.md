@@ -1,13 +1,13 @@
 # Router decision tree (v1)
 
-This is a lightweight routing guide. It assumes you can run `wp-project-triage` first.
+This is a lightweight routing guide. Start from filesystem signals and local helper scans.
 
-## Step 1: classify repo kind (from triage)
+## Step 1: classify repo kind
 
-Use `triage.project.kind` and the strongest signals:
+Use the strongest repo signals first:
 
 - `wp-core` → treat as WordPress core checkout work (core patches, PHPUnit, build tools).
-- `wp-site` → treat as a full site repo (wp-content present; changes might be theme + plugins).
+- `wp-site` → treat as a full site repo. Bedrock usually exposes `web/app`, `web/wp`, `config/application.php`, and `web/wp-config.php`; classic installs usually expose `wp-content` plus a root `wp-config.php`.
 - `wp-block-theme` → theme.json/templates/patterns workflows.
 - `wp-theme` → classic theme workflows (templates PHP, `functions.php`, `style.css`).
 - `wp-block-plugin` → Gutenberg block development in a plugin (block.json, build pipeline).

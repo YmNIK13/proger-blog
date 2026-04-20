@@ -17,7 +17,8 @@ Use this skill when the task involves:
 
 ## Inputs required
 
-- Repo root (run `wp-project-triage` first if you haven’t).
+- Repo root and the runtime location you are changing.
+- In Bedrock repos, changes usually live under `web/app/plugins/`, `web/app/mu-plugins/`, or `web/app/themes/`.
 - Target WordPress version(s) and whether this is WP core or a plugin/theme.
 - Where the change should live (plugin vs theme vs mu-plugin).
 
@@ -25,7 +26,8 @@ Use this skill when the task involves:
 
 ### 1) Confirm availability and version constraints
 
-- If this is WP core work, check `signals.isWpCoreCheckout` and `versions.wordpress.core`.
+- Confirm the repo layout first. In Bedrock, `config/application.php` is the primary config and `web/wp` is Composer-managed core.
+- If this is WP core work, confirm you are actually in a core checkout and note the target core version.
 - If the project targets WP < 6.9, you may need the Abilities API plugin/package rather than relying on core.
 
 ### 2) Find existing Abilities usage
@@ -70,7 +72,7 @@ Use the documented init hooks for Abilities API registration so they load at the
 
 ## Verification
 
-- `wp-project-triage` indicates `signals.usesAbilitiesApi: true` after your change (if applicable).
+- Code search shows the intended `wp_register_ability`, `wp_register_ability_category`, `wp-abilities/v1`, or `@wordpress/abilities` usage after your change.
 - REST check (in a WP environment): endpoints under `wp-abilities/v1` return your ability and category when expected.
 - If the repo has tests, add/update coverage near:
   - PHP: ability registration and meta exposure

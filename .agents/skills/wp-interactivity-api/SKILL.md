@@ -17,7 +17,8 @@ Use this skill when the user mentions:
 
 ## Inputs required
 
-- Repo root + triage output (`wp-project-triage`).
+- Repo root + local layout signals.
+- In Bedrock repos, interactive code usually lives under `web/app/plugins/`, `web/app/mu-plugins/`, or `web/app/themes/`.
 - Which block/theme/plugin surfaces are affected (frontend, editor, both).
 - Any constraints: WP version, whether modules are supported in the build.
 
@@ -30,6 +31,8 @@ Search for:
 - `data-wp-interactive`
 - `@wordpress/interactivity`
 - `viewScriptModule`
+
+In Bedrock site repos, search inside the relevant `web/app/...` target first.
 
 Decide:
 
@@ -147,7 +150,7 @@ See `references/debugging.md`.
 
 ## Verification
 
-- `wp-project-triage` indicates `signals.usesInteractivityApi: true` after your change (if applicable).
+- Code search finds the intended `data-wp-interactive`, `viewScriptModule`, `supports.interactivity`, or `wp_interactivity_*()` usage after your change.
 - Manual smoke test: directive triggers and state updates as expected.
 - If tests exist: add/extend Playwright E2E around the interaction path.
 
