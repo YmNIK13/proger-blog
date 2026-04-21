@@ -1,118 +1,235 @@
-import { store, getElement } from '@wordpress/interactivity';
+/* eslint-env browser */
 
 const HEADER_OFFSET = 80;
+const TOC_ROOT_SELECTOR = '.toc';
+const TOC_LINK_SELECTOR = '.toc__link[data-target]';
+const FLOATING_TOC_SELECTOR = '.single-floating-toc';
+
 const prefersReduced = () =>
 	typeof window.matchMedia === 'function' &&
-	window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+	window.matchMedia( '(prefers-reduced-motion: reduce)' ).matches;
 
-store('proger/toc', {
-	actions: {
-		onClick(event) {
-			event.preventDefault();
-			const { ref } = getElement();
-			const targetSlug = ref.getAttribute('data-target');
-			if (!targetSlug) return;
-			const target = document.getElementById(targetSlug);
-			if (!target) return;
+const closeFloatingToc = ( details ) => {
+	if ( details instanceof HTMLDetailsElement ) {
+		details.removeAttribute( 'open' );
+	}
+};
 
-			const top =
-				target.getBoundingClientRect().top + window.scrollY - HEADER_OFFSET;
-			window.scrollTo({
-				top,
-				behavior: prefersReduced() ? 'auto' : 'smooth',
-			});
+const focusHeading = ( target ) => {
+	const previousTabIndex = target.getAttribute( 'tabindex' );
 
-			const floatingToc = ref.closest('.single-floating-toc');
-			if (floatingToc instanceof HTMLDetailsElement) {
-				floatingToc.removeAttribute('open');
+	target.setAttribute( 'tabindex', '-1' );
+	target.focus( { preventScroll: true } );
+
+	if ( previousTabIndex === null ) {
+		window.setTimeout( () => target.removeAttribute( 'tabindex' ), 300 );
+	}
+};
+
+const scrollToHeading = ( targetSlug ) => {
+	if ( ! targetSlug ) {
+		return false;
+	}
+
+	const target = document.getElementById( targetSlug );
+
+	if ( ! target ) {
+		return false;
+	}
+
+	const top =
+		target.getBoundingClientRect().top + window.scrollY - HEADER_OFFSET;
+
+	window.scrollTo( {
+		top,
+		behavior: prefersReduced() ? 'auto' : 'smooth',
+	} );
+
+	history.replaceState( null, '', `#${ targetSlug }` );
+	focusHeading( target );
+
+	return true;
+};
+
+const bindFloatingToc = ( details ) => {
+	if (
+		! ( details instanceof HTMLDetailsElement ) ||
+		details.dataset.tocBound === 'true'
+	) {
+		return;
+	}
+
+	details.dataset.tocBound = 'true';
+	details.addEventListener( 'click', ( event ) => {
+		if ( ! ( event.target instanceof Element ) ) {
+			return;
+		}
+
+		const closeTarget = event.target.closest( '[data-toc-close]' );
+
+		if ( ! closeTarget || ! details.contains( closeTarget ) ) {
+			return;
+		}
+
+		event.preventDefault();
+		closeFloatingToc( details );
+	} );
+};
+
+const bindTocRoot = ( root ) => {
+	if (
+		! ( root instanceof HTMLElement ) ||
+		root.dataset.tocReady === 'true'
+	) {
+		return;
+	}
+
+	root.dataset.tocReady = 'true';
+	root.addEventListener( 'click', ( event ) => {
+		if ( ! ( event.target instanceof Element ) ) {
+			return;
+		}
+
+		const link = event.target.closest( TOC_LINK_SELECTOR );
+
+		if ( ! link || ! root.contains( link ) ) {
+			return;
+		}
+
+		const targetSlug = link.getAttribute( 'data-target' );
+
+		if ( ! scrollToHeading( targetSlug ) ) {
+			return;
+		}
+
+		event.preventDefault();
+		closeFloatingToc( link.closest( FLOATING_TOC_SELECTOR ) );
+	} );
+};
+
+const initScrollSpy = ( roots ) => {
+	if ( ! roots.length || ! ( 'IntersectionObserver' in window ) ) {
+		return;
+	}
+
+	const slugToLinks = new Map();
+
+	roots.forEach( ( root ) => {
+		root.querySelectorAll( TOC_LINK_SELECTOR ).forEach( ( link ) => {
+			const slug = link.getAttribute( 'data-target' );
+
+			if ( ! slug ) {
+				return;
 			}
 
-			history.replaceState(null, '', `#${targetSlug}`);
-			const prev = target.getAttribute('tabindex');
-			target.setAttribute('tabindex', '-1');
-			target.focus({ preventScroll: true });
-			if (prev === null) {
-				setTimeout(() => target.removeAttribute('tabindex'), 300);
-			}
-		},
-	},
-	callbacks: {
-		init() {
-			const { ref } = getElement();
-			const links = Array.from(ref.querySelectorAll('.toc__link'));
-			const floatingToc = ref.closest('.single-floating-toc');
+			const links = slugToLinks.get( slug ) ?? [];
+			links.push( link );
+			slugToLinks.set( slug, links );
+		} );
+	} );
 
-			if (floatingToc instanceof HTMLDetailsElement) {
-				const closeFloatingToc = () => floatingToc.removeAttribute('open');
+	const headings = Array.from( slugToLinks.keys() )
+		.map( ( slug ) => document.getElementById( slug ) )
+		.filter( Boolean );
 
-				if (!floatingToc.dataset.tocBound) {
-					floatingToc.dataset.tocBound = 'true';
+	if ( ! headings.length ) {
+		return;
+	}
 
-					floatingToc.addEventListener('click', (event) => {
-						const closeTarget =
-							event.target instanceof Element
-								? event.target.closest('[data-toc-close]')
-								: null;
+	let activeSlug = null;
+	const visible = new Set();
 
-						if (!closeTarget || !floatingToc.contains(closeTarget)) {
-							return;
-						}
+	const setActive = ( slug ) => {
+		if ( slug === activeSlug ) {
+			return;
+		}
 
-						event.preventDefault();
-						closeFloatingToc();
-					});
+		if ( activeSlug ) {
+			( slugToLinks.get( activeSlug ) ?? [] ).forEach( ( link ) => {
+				link.classList.remove( 'is-active' );
+				link.removeAttribute( 'aria-current' );
+			} );
+		}
 
-					document.addEventListener('keydown', (event) => {
-						if (event.key === 'Escape') {
-							closeFloatingToc();
-						}
-					});
-				}
-			}
+		if ( slug ) {
+			( slugToLinks.get( slug ) ?? [] ).forEach( ( link ) => {
+				link.classList.add( 'is-active' );
+				link.setAttribute( 'aria-current', 'location' );
+			} );
+		}
 
-			if (!links.length || !('IntersectionObserver' in window)) return;
+		activeSlug = slug;
+	};
 
-			const slugToLink = new Map(
-				links.map((a) => [a.getAttribute('data-target'), a]),
+	const resolveActiveSlug = () => {
+		const firstVisible = headings.find( ( heading ) =>
+			visible.has( heading.id )
+		);
+
+		if ( firstVisible ) {
+			return firstVisible.id;
+		}
+
+		const passedHeading = headings
+			.slice()
+			.reverse()
+			.find(
+				( heading ) =>
+					heading.getBoundingClientRect().top <= HEADER_OFFSET + 12
 			);
-			const headings = links
-				.map((a) => document.getElementById(a.getAttribute('data-target')))
-				.filter(Boolean);
 
-			let activeSlug = null;
-			const setActive = (slug) => {
-				if (slug === activeSlug) return;
-				if (activeSlug) {
-					const prev = slugToLink.get(activeSlug);
-					prev?.classList.remove('is-active');
-					prev?.removeAttribute('aria-current');
+		return passedHeading ? passedHeading.id : null;
+	};
+
+	const observer = new IntersectionObserver(
+		( entries ) => {
+			entries.forEach( ( entry ) => {
+				if ( entry.isIntersecting ) {
+					visible.add( entry.target.id );
+					return;
 				}
-				if (slug) {
-					const next = slugToLink.get(slug);
-					next?.classList.add('is-active');
-					next?.setAttribute('aria-current', 'location');
-				}
-				activeSlug = slug;
-			};
 
-			const visible = new Set();
-			const io = new IntersectionObserver(
-				(entries) => {
-					entries.forEach((entry) => {
-						const id = entry.target.id;
-						if (entry.isIntersecting) visible.add(id);
-						else visible.delete(id);
-					});
-					const top = headings.find((h) => visible.has(h.id));
-					setActive(top ? top.id : null);
-				},
-				{
-					rootMargin: `-${HEADER_OFFSET}px 0px -60% 0px`,
-					threshold: [0, 1],
-				},
-			);
+				visible.delete( entry.target.id );
+			} );
 
-			headings.forEach((h) => io.observe(h));
+			setActive( resolveActiveSlug() );
 		},
-	},
-});
+		{
+			rootMargin: `-${ HEADER_OFFSET }px 0px -60% 0px`,
+			threshold: [ 0, 1 ],
+		}
+	);
+
+	headings.forEach( ( heading ) => observer.observe( heading ) );
+	setActive( resolveActiveSlug() );
+};
+
+const initToc = () => {
+	const roots = Array.from( document.querySelectorAll( TOC_ROOT_SELECTOR ) );
+
+	if ( ! roots.length ) {
+		return;
+	}
+
+	roots.forEach( bindTocRoot );
+	document
+		.querySelectorAll( FLOATING_TOC_SELECTOR )
+		.forEach( bindFloatingToc );
+	initScrollSpy( roots );
+};
+
+if ( document.readyState === 'loading' ) {
+	document.addEventListener( 'DOMContentLoaded', initToc, { once: true } );
+} else {
+	initToc();
+}
+
+document.addEventListener( 'keydown', ( event ) => {
+	if ( event.key !== 'Escape' ) {
+		return;
+	}
+
+	document.querySelectorAll( FLOATING_TOC_SELECTOR ).forEach( ( details ) => {
+		closeFloatingToc( details );
+	} );
+} );

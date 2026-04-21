@@ -25,9 +25,8 @@ if ($show_numbers) {
 }
 
 $wrapper_attrs = get_block_wrapper_attributes([
-	'class'                   => implode(' ', $classes),
-	'data-wp-interactive'     => 'proger/code',
-	'data-language'           => $language_slug,
+	'class'         => implode(' ', $classes),
+	'data-language' => $language_slug,
 ]);
 ?>
 <figure <?php echo $wrapper_attrs; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>>
@@ -39,8 +38,9 @@ $wrapper_attrs = get_block_wrapper_attributes([
 		<button
 			type="button"
 			class="proger-code__copy"
-			data-wp-on--click="actions.copy"
-			data-wp-bind--aria-label="state.copyLabel"
+			data-copy-default-label="<?php echo esc_attr__('Copy', 'proger-blog'); ?>"
+			data-copy-success-label="<?php echo esc_attr__('Скопійовано', 'proger-blog'); ?>"
+			data-copy-error-label="<?php echo esc_attr__('Помилка', 'proger-blog'); ?>"
 			aria-label="<?php esc_attr_e('Копіювати код', 'proger-blog'); ?>">
 			<span class="proger-code__copy-icon" aria-hidden="true">
 				<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -48,9 +48,9 @@ $wrapper_attrs = get_block_wrapper_attributes([
 					<path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
 				</svg>
 			</span>
-			<span class="proger-code__copy-label" data-wp-text="state.copyLabel"><?php esc_html_e('Copy', 'proger-blog'); ?></span>
+			<span class="proger-code__copy-label"><?php esc_html_e('Copy', 'proger-blog'); ?></span>
 		</button>
 	</header>
-	<pre class="proger-code__pre"><code class="language-<?php echo esc_attr($language_slug); ?>" data-wp-text="state.content"><?php echo esc_html($code_content); ?></code></pre>
+	<pre class="proger-code__pre"><code class="language-<?php echo esc_attr($language_slug); ?>"><?php echo esc_html($code_content); ?></code></pre>
 </figure>
 <?php

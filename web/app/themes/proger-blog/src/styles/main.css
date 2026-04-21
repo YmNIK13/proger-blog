@@ -166,8 +166,13 @@
 		min-width: 0;
 	}
 
+	.single-desktop-toc {
+		min-width: 0;
+	}
+
 	.single-toc-rail {
 		height: 100%;
+		min-height: 0;
 	}
 
 	.single-floating-tools {
@@ -342,7 +347,11 @@
 		@apply border-l-4 border-primary-container pl-6 py-2 my-8 bg-white italic text-slate-800;
 	}
 	.prose-matter :not(pre):not(code) > code {
-		@apply font-mono text-sm bg-white text-primary-container px-1.5 py-0.5 rounded;
+		@apply font-mono text-sm px-1.5 py-0.5 rounded;
+		background-color: var(--proger-color-code-bg, #0f172a);
+		color: var(--proger-color-primary-fixed, #acf847);
+		border: 1px solid rgb(148 163 184 / 10%);
+		text-shadow: 0 0 12px rgb(158 233 57 / 10%);
 	}
 	.prose-matter pre:not(.proger-code__pre) {
 		@apply font-mono text-sm p-6 rounded-xl overflow-x-auto my-8;
@@ -425,15 +434,71 @@
 		}
 	}
 
-	@media (max-width: 1170px) and (min-width: 1024px) {
-		.single-layout--with-sidebar {
-			padding-left: 0.85rem;
-			padding-right: 0.85rem;
+	@media (min-width: 1441px) {
+		.single-layout.single-layout--has-toc {
+			flex-direction: row;
+			align-items: flex-start;
+			justify-content: center;
+			gap: 1.25rem;
+			padding-left: 1rem;
+			padding-right: 1rem;
 		}
 
-		.single-layout--with-sidebar .single-article {
-			max-width: min(100%, 42.5rem);
-			padding: 1.1rem;
+		.single-layout.single-layout--has-toc .single-article.single-article--with-toc {
+			max-width: 50rem;
+			padding: 1.75rem;
+		}
+
+		.single-layout.single-layout--has-toc .single-desktop-toc {
+			display: block;
+			width: 21rem;
+			height: calc(100vh - 7rem);
+			max-height: calc(100vh - 7rem);
+			position: sticky;
+			top: 6rem;
+			align-self: flex-start;
+		}
+	}
+
+	@media (min-width: 1701px) {
+		.single-layout.single-layout--has-toc {
+			gap: 2rem;
+			padding-left: 1.5rem;
+			padding-right: 1.5rem;
+		}
+
+		.single-layout.single-layout--has-toc .single-article.single-article--with-toc {
+			max-width: 55rem;
+			padding: 2rem;
+		}
+	}
+
+	@media (min-width: 1801px) {
+		.single-layout.single-layout--has-toc {
+			gap: 2.5rem;
+			padding-left: 2rem;
+			padding-right: 2rem;
+		}
+
+		.single-layout.single-layout--has-toc .single-article.single-article--with-toc {
+			max-width: 60rem;
+			padding: 2.5rem;
+		}
+	}
+
+	@media (max-width: 1170px) and (min-width: 1024px) {
+		.single-layout.single-layout--with-sidebar {
+			padding-left: 0.65rem;
+			padding-right: 0.65rem;
+		}
+
+		.single-layout.single-layout--with-sidebar .single-article {
+			max-width: min(100%, 40rem);
+			padding: 1rem;
+		}
+
+		.single-layout.single-layout--with-sidebar h1 {
+			font-size: clamp(2rem, 4vw, 2.75rem);
 		}
 	}
 

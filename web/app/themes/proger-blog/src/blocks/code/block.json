@@ -17,8 +17,7 @@
 		"html": false,
 		"reusable": true,
 		"multiple": true,
-		"align": ["wide", "full"],
-		"interactivity": true
+		"align": ["wide", "full"]
 	},
 	"editorScript": "file:./edit.js",
 	"editorStyle": "file:./editor.css",

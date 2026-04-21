@@ -19,7 +19,7 @@ get_header(); ?>
 		$layout_state_class = get_theme_mod('proger_enable_sidebar', true) ? ' single-layout--with-sidebar' : '';
 		$main_class = 'single-layout flex-1 px-3 sm:px-4 lg:px-6 xl:px-8 pt-8 pb-28 sm:pt-10 sm:pb-28 lg:py-20 flex flex-col relative min-h-screen items-center' . $sidebar_offset . $layout_state_class;
 		$article_class = 'single-article single-matter w-full max-w-[960px] p-4 sm:p-5 lg:p-7 xl:p-10 relative mx-auto';
-		$aside_class = '';
+		$aside_class = 'single-desktop-toc hidden min-[1441px]:block shrink-0 self-start';
 
 		if (get_theme_mod('proger_enable_toc', true)) {
 			$toc_markup = trim((string) do_blocks('<!-- wp:proger-blog/toc /-->'));
@@ -27,9 +27,8 @@ get_header(); ?>
 		}
 
 		if ($has_toc) {
-			$main_class    = 'single-layout flex-1 px-3 sm:px-4 lg:px-6 pt-8 pb-28 sm:pt-10 sm:pb-28 lg:py-20 flex flex-col relative min-h-screen items-center min-[1441px]:flex-row min-[1441px]:items-start min-[1441px]:justify-center min-[1441px]:gap-5 min-[1441px]:px-4 min-[1701px]:gap-8 min-[1701px]:px-6 min-[1801px]:gap-10 min-[1801px]:px-8' . $sidebar_offset . $layout_state_class;
-			$article_class = 'single-article single-matter w-full max-w-[960px] p-4 sm:p-5 lg:p-7 relative min-[1441px]:max-w-[800px] min-[1441px]:xl:p-7 min-[1701px]:max-w-[880px] min-[1701px]:xl:p-8 min-[1801px]:max-w-[960px] min-[1801px]:xl:p-10';
-			$aside_class   = 'hidden min-[1441px]:block min-[1441px]:w-[21rem] min-[1441px]:sticky min-[1441px]:top-24 min-[1441px]:max-h-[calc(100vh-7rem)] shrink-0 self-start';
+			$main_class .= ' single-layout--has-toc';
+			$article_class = 'single-article single-article--with-toc single-matter w-full max-w-[960px] p-4 sm:p-5 lg:p-7 relative xl:p-10';
 		}
 		?>
 		<main id="main" class="<?php echo esc_attr($main_class); ?>">
@@ -104,7 +103,7 @@ get_header(); ?>
 							<?php echo proger_blog_icon('menu_book', 'text-[20px]'); ?>
 							<span class="sr-only"><?php echo esc_html($toc_title); ?></span>
 						</summary>
-						<button type="button" class="single-floating-toc__backdrop" data-toc-close tabindex="-1" aria-hidden="true"></button>
+						<button type="button" class="single-floating-toc__backdrop" data-toc-close aria-label="<?php esc_attr_e('Закрити зміст', 'proger-blog'); ?>"></button>
 						<div class="single-floating-toc__panel">
 						<div class="single-floating-toc__panel-header">
 							<p class="single-floating-toc__panel-title"><?php echo esc_html($toc_title); ?></p>

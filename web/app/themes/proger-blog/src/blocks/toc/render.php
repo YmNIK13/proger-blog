@@ -50,7 +50,7 @@ $build_list = static function (array $items) use (&$build_list): string {
 	$html = '<ol class="toc__list">';
 	foreach ($items as $node) {
 		$html .= sprintf(
-			'<li class="toc__item toc__item--level-%1$d"><a class="toc__link" href="#%2$s" data-wp-on--click="actions.onClick" data-target="%2$s">%3$s</a>',
+			'<li class="toc__item toc__item--level-%1$d"><a class="toc__link" href="#%2$s" data-target="%2$s">%3$s</a>',
 			(int) $node['level'],
 			esc_attr($node['slug']),
 			esc_html($node['text'])
@@ -113,9 +113,7 @@ $json_ld = wp_json_encode([
 static $toc_ld_emitted = false;
 
 $wrapper_attrs = get_block_wrapper_attributes([
-	'class'               => 'toc',
-	'data-wp-interactive' => 'proger/toc',
-	'data-wp-init'        => 'callbacks.init',
+	'class' => 'toc',
 ]);
 ?>
 <nav <?php echo $wrapper_attrs; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?> aria-label="<?php echo esc_attr($title); ?>">

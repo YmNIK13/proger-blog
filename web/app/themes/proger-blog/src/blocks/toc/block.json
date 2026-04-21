@@ -14,8 +14,7 @@
 	"supports": {
 		"html": false,
 		"multiple": false,
-		"reusable": false,
-		"interactivity": true
+		"reusable": false
 	},
 	"editorScript": "file:./edit.js",
 	"style": "file:./style.css",

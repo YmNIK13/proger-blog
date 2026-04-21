@@ -1,91 +1,157 @@
-import { store, getContext, getElement } from '@wordpress/interactivity';
+/* eslint-env browser */
 
 const PRISM_CDN = 'https://cdn.jsdelivr.net/npm/prismjs@1.29.0';
+const CODE_BLOCK_SELECTOR = '.proger-code';
+const COPY_RESET_DELAY = 2000;
 
 const LANG_DEPS = {
-	typescript: ['javascript'],
-	scss: ['css'],
-	php: ['markup'],
+	typescript: [ 'javascript' ],
+	scss: [ 'css' ],
+	php: [ 'markup' ],
 };
 
 const loadedLangs = new Set();
-const loadScript = (src) =>
-	new Promise((resolve, reject) => {
-		const s = document.createElement('script');
+const loadScript = ( src ) =>
+	new Promise( ( resolve, reject ) => {
+		const s = document.createElement( 'script' );
 		s.src = src;
 		s.async = false;
 		s.onload = resolve;
 		s.onerror = reject;
-		document.head.appendChild(s);
-	});
+		document.head.appendChild( s );
+	} );
 
 async function ensurePrism() {
-	if (window.Prism) return window.Prism;
-	await loadScript(`${PRISM_CDN}/prism.min.js`);
+	if ( window.Prism ) {
+		return window.Prism;
+	}
+
+	await loadScript( `${ PRISM_CDN }/prism.min.js` );
 	window.Prism.manual = true;
 	return window.Prism;
 }
 
-async function ensureLanguage(lang) {
-	if (!lang || lang === 'plaintext' || loadedLangs.has(lang)) return;
+async function ensureLanguage( lang ) {
+	if ( ! lang || lang === 'plaintext' || loadedLangs.has( lang ) ) {
+		return;
+	}
+
 	const Prism = await ensurePrism();
-	const deps = LANG_DEPS[lang] ?? [];
-	for (const dep of deps) {
-		await ensureLanguage(dep);
+	const deps = LANG_DEPS[ lang ] ?? [];
+	for ( const dep of deps ) {
+		await ensureLanguage( dep );
 	}
-	if (!Prism.languages[lang]) {
-		await loadScript(`${PRISM_CDN}/components/prism-${lang}.min.js`);
+	if ( ! Prism.languages[ lang ] ) {
+		await loadScript( `${ PRISM_CDN }/components/prism-${ lang }.min.js` );
 	}
-	loadedLangs.add(lang);
+	loadedLangs.add( lang );
 }
 
-const { state, actions } = store('proger/code', {
-	state: {
-		copyLabel: 'Copy',
-	},
-	actions: {
-		*copy(event) {
+async function copyText( text ) {
+	if ( navigator.clipboard?.writeText ) {
+		await navigator.clipboard.writeText( text );
+		return;
+	}
+
+	const textarea = document.createElement( 'textarea' );
+	textarea.value = text;
+	textarea.setAttribute( 'readonly', '' );
+	textarea.style.position = 'absolute';
+	textarea.style.left = '-9999px';
+	document.body.appendChild( textarea );
+	textarea.select();
+	document.execCommand( 'copy' );
+	textarea.remove();
+}
+
+function setCopyState( button, label, stateClass ) {
+	const root = button.closest( CODE_BLOCK_SELECTOR );
+	const labelNode = button.querySelector( '.proger-code__copy-label' );
+	const defaultLabel = button.dataset.copyDefaultLabel || 'Copy';
+
+	root?.classList.remove( 'is-copied', 'is-error' );
+	if ( stateClass ) {
+		root?.classList.add( stateClass );
+	}
+
+	if ( labelNode ) {
+		labelNode.textContent = label;
+	}
+
+	button.setAttribute( 'aria-label', label );
+
+	window.setTimeout( () => {
+		root?.classList.remove( 'is-copied', 'is-error' );
+		if ( labelNode ) {
+			labelNode.textContent = defaultLabel;
+		}
+		button.setAttribute( 'aria-label', defaultLabel );
+	}, COPY_RESET_DELAY );
+}
+
+async function highlightBlock( root ) {
+	if (
+		! ( root instanceof HTMLElement ) ||
+		root.dataset.highlighted === 'true'
+	) {
+		return;
+	}
+
+	root.dataset.highlighted = 'true';
+
+	const lang = root.dataset.language ?? 'plaintext';
+	if ( lang === 'plaintext' ) {
+		return;
+	}
+
+	await ensureLanguage( lang );
+
+	const codeElement = root.querySelector( 'code' );
+	if ( codeElement && window.Prism?.languages?.[ lang ] ) {
+		window.Prism.highlightElement( codeElement );
+	}
+}
+
+function bindCodeBlock( root ) {
+	if (
+		! ( root instanceof HTMLElement ) ||
+		root.dataset.codeReady === 'true'
+	) {
+		return;
+	}
+
+	root.dataset.codeReady = 'true';
+
+	const copyButton = root.querySelector( '.proger-code__copy' );
+	if ( copyButton instanceof HTMLButtonElement ) {
+		copyButton.addEventListener( 'click', async ( event ) => {
 			event.preventDefault();
-			const { ref } = getElement();
-			const code = ref.closest('.proger-code')?.querySelector('code')?.innerText ?? '';
+
+			const code = root.querySelector( 'code' )?.innerText ?? '';
+			const successLabel =
+				copyButton.dataset.copySuccessLabel || 'Скопійовано';
+			const errorLabel = copyButton.dataset.copyErrorLabel || 'Помилка';
 
 			try {
-				if (navigator.clipboard?.writeText) {
-					yield navigator.clipboard.writeText(code);
-				} else {
-					const ta = document.createElement('textarea');
-					ta.value = code;
-					ta.setAttribute('readonly', '');
-					ta.style.position = 'absolute';
-					ta.style.left = '-9999px';
-					document.body.appendChild(ta);
-					ta.select();
-					document.execCommand('copy');
-					ta.remove();
-				}
-				state.copyLabel = 'Скопійовано';
-				ref.closest('.proger-code')?.classList.add('is-copied');
-			} catch (_err) {
-				state.copyLabel = 'Помилка';
-				ref.closest('.proger-code')?.classList.add('is-error');
+				await copyText( code );
+				setCopyState( copyButton, successLabel, 'is-copied' );
+			} catch ( _error ) {
+				setCopyState( copyButton, errorLabel, 'is-error' );
 			}
+		} );
+	}
 
-			setTimeout(() => {
-				state.copyLabel = 'Copy';
-				ref.closest('.proger-code')?.classList.remove('is-copied', 'is-error');
-			}, 2000);
-		},
-	},
-	callbacks: {
-		*highlight() {
-			const { ref } = getElement();
-			const lang = ref.dataset.language ?? 'plaintext';
-			if (lang === 'plaintext') return;
-			yield ensureLanguage(lang);
-			const codeEl = ref.querySelector('code');
-			if (codeEl && window.Prism?.languages?.[lang]) {
-				window.Prism.highlightElement(codeEl);
-			}
-		},
-	},
-});
+	void highlightBlock( root );
+}
+
+function initCodeBlocks() {
+	document.querySelectorAll( CODE_BLOCK_SELECTOR ).forEach( bindCodeBlock );
+}
+
+if ( document.readyState === 'loading' ) {
+	document.addEventListener( 'DOMContentLoaded', initCodeBlocks, {
+		once: true,
+	} );
+} else {
+	initCodeBlocks();
+}
