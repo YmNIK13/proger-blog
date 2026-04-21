@@ -1,0 +1,40 @@
+name: blog_wp
+
+services:
+    nginx:
+        build:
+            context: .
+            target: nginx-production
+        restart: unless-stopped
+        ports:
+            - "127.0.0.1:10301:80"
+        volumes:
+            - ./web/app/uploads:/app/web/app/uploads
+        depends_on:
+            - wp_php
+
+    wp_php:
+        build:
+            context: .
+            target: production
+        restart: unless-stopped
+        env_file:
+            - .env
+        volumes:
+            - ./web/app/uploads:/app/web/app/uploads
+        depends_on:
+            - db
+
+    db:
+        image: mysql:8.4.8
+        restart: unless-stopped
+        environment:
+            MYSQL_DATABASE: ${DB_NAME}
+            MYSQL_USER: ${DB_USER}
+            MYSQL_PASSWORD: ${DB_PASSWORD}
+            MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+        ports:
+            - "127.0.0.1:11301:3306"
+        volumes:
+            - ./.db/data:/var/lib/mysql
+            - ./.db/dump:/dump
