@@ -1,0 +1,8 @@
+/* Active link state for scroll-spy. Tailwind utilities cannot easily handle
+   dynamic class-toggling here because we need brand-coloured left border. */
+
+.toc__link.is-active {
+	color: var(--proger-color-primary, #9ee939);
+	border-color: var(--proger-color-primary, #9ee939);
+	font-weight: 500;
+}

@@ -1,0 +1,28 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "proger-blog/code",
+	"title": "Proger Code",
+	"category": "text",
+	"icon": "editor-code",
+	"description": "Stylised code block with Prism syntax highlighting and copy-to-clipboard.",
+	"textdomain": "proger-blog",
+	"attributes": {
+		"content": { "type": "string", "default": "" },
+		"language": { "type": "string", "default": "plaintext" },
+		"filename": { "type": "string", "default": "" },
+		"showLineNumbers": { "type": "boolean", "default": false }
+	},
+	"supports": {
+		"html": false,
+		"reusable": true,
+		"multiple": true,
+		"align": ["wide", "full"],
+		"interactivity": true
+	},
+	"editorScript": "file:./edit.js",
+	"editorStyle": "file:./editor.css",
+	"style": "file:./style.css",
+	"viewScriptModule": "file:./view.js",
+	"render": "file:./render.php"
+}

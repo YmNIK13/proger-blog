@@ -1,0 +1,47 @@
+/* Minimal CSS for proger-blog/code — layout is via Tailwind classes
+   in render.php. This file adds (1) Prism token colors tied to design
+   tokens via :root vars, (2) line-number counter logic, (3) copy-state
+   feedback colours. */
+
+.proger-code.is-copied .proger-code__copy-label { color: var(--proger-color-primary, #9ee939); }
+.proger-code.is-error .proger-code__copy-label { color: var(--proger-color-error, #ffb4ab); }
+
+.proger-code--line-numbers .proger-code__pre code {
+	counter-reset: line;
+	display: block;
+}
+.proger-code--line-numbers .proger-code__pre code > * {
+	counter-increment: line;
+}
+.proger-code--line-numbers .proger-code__pre code::before {
+	content: counter(line);
+	display: inline-block;
+	inline-size: 2.5em;
+	padding-inline-end: 0.75rem;
+	color: var(--proger-color-outline, #8b947d);
+	text-align: end;
+	user-select: none;
+}
+
+/* Prism token colours from stitch tokens */
+.proger-code .token.keyword,
+.proger-code .token.operator,
+.proger-code .token.selector { color: var(--proger-color-code-keyword, #22c55e); }
+
+.proger-code .token.string,
+.proger-code .token.attr-value,
+.proger-code .token.regex { color: var(--proger-color-code-string, #facc15); }
+
+.proger-code .token.function,
+.proger-code .token.class-name { color: var(--proger-color-code-function, #38bdf8); }
+
+.proger-code .token.comment,
+.proger-code .token.prolog,
+.proger-code .token.cdata {
+	color: var(--proger-color-code-comment, #64748b);
+	font-style: italic;
+}
+
+.proger-code .token.property,
+.proger-code .token.tag,
+.proger-code .token.attr-name { color: var(--proger-color-tertiary, #a1dbff); }

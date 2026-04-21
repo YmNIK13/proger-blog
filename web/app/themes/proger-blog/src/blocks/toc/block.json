@@ -1,0 +1,24 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "proger-blog/toc",
+	"title": "Proger TOC",
+	"category": "widgets",
+	"icon": "list-view",
+	"description": "Auto-generated Table of Contents with scroll-spy, smooth scroll and schema.org JSON-LD.",
+	"textdomain": "proger-blog",
+	"attributes": {
+		"maxLevel": { "type": "number", "default": 4 },
+		"title": { "type": "string", "default": "Зміст" }
+	},
+	"supports": {
+		"html": false,
+		"multiple": false,
+		"reusable": false,
+		"interactivity": true
+	},
+	"editorScript": "file:./edit.js",
+	"style": "file:./style.css",
+	"viewScriptModule": "file:./view.js",
+	"render": "file:./render.php"
+}

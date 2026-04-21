@@ -1,0 +1,43 @@
+{
+	"name": "proger-blog",
+	"version": "1.0.0",
+	"private": true,
+	"description": "Build toolchain for the proger-blog WordPress theme.",
+	"license": "GPL-2.0-or-later",
+	"scripts": {
+		"start": "wp-scripts start --webpack-src-dir=src --output-path=build",
+		"build": "wp-scripts build --webpack-src-dir=src --output-path=build && node scripts/fix-module-deps.mjs",
+		"lint:js": "wp-scripts lint-js src",
+		"lint:css": "stylelint \"src/**/*.{scss,css}\" \"blocks/**/*.{scss,css}\"",
+		"sync:tokens": "node scripts/sync-tokens.mjs",
+		"sync:tokens:check": "node scripts/sync-tokens.mjs --check",
+		"format": "wp-scripts format src"
+	},
+	"devDependencies": {
+		"@tailwindcss/forms": "^0.5.7",
+		"@tailwindcss/typography": "^0.5.10",
+		"@wordpress/scripts": "^30.0.0",
+		"autoprefixer": "^10.4.17",
+		"postcss": "^8.4.35",
+		"sass": "^1.77.0",
+		"sass-loader": "^14.0.0",
+		"stylelint": "^16.0.0",
+		"stylelint-config-standard-scss": "^13.0.0",
+		"stylelint-scss": "^6.0.0",
+		"tailwindcss": "^3.4.1"
+	},
+	"dependencies": {
+		"@wordpress/interactivity": "^6.0.0",
+		"prismjs": "^1.29.0"
+	},
+	"overrides": {
+		"@tootallnate/once": "^3.0.1",
+		"minimatch": "^9.0.7",
+		"serialize-javascript": "^7.0.5",
+		"copy-webpack-plugin": "^12.0.2",
+		"webpack-dev-server": "^5.2.1"
+	},
+	"engines": {
+		"node": ">=20"
+	}
+}

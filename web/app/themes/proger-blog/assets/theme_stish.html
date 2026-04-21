@@ -1,0 +1,1133 @@
+<!-- Listing & Search -->
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DevTerminal - Search &amp; Filter</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;family=JetBrains+Mono:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "tertiary": "#a1dbff",
+                      "surface": "#021520",
+                      "on-secondary-fixed-variant": "#783200",
+                      "surface-dim": "#021520",
+                      "secondary-container": "#ec6a06",
+                      "primary-fixed-dim": "#91db2a",
+                      "on-tertiary-container": "#004f6c",
+                      "surface-container-lowest": "#00101a",
+                      "on-primary": "#1f3700",
+                      "on-primary-fixed": "#102000",
+                      "outline-variant": "#424936",
+                      "tertiary-fixed-dim": "#7bd0ff",
+                      "surface-bright": "#293b47",
+                      "primary-fixed": "#acf847",
+                      "inverse-on-surface": "#20333e",
+                      "surface-container-low": "#091e29",
+                      "on-surface": "#d1e5f5",
+                      "primary-container": "#84cc16",
+                      "tertiary-fixed": "#c4e7ff",
+                      "outline": "#8b947d",
+                      "on-tertiary-fixed-variant": "#004c69",
+                      "inverse-surface": "#d1e5f5",
+                      "on-primary-container": "#315200",
+                      "primary": "#9ee939",
+                      "on-tertiary-fixed": "#001e2c",
+                      "on-secondary": "#552100",
+                      "surface-container": "#0e222d",
+                      "secondary-fixed-dim": "#ffb690",
+                      "error": "#ffb4ab",
+                      "surface-container-high": "#192c38",
+                      "on-tertiary": "#00354a",
+                      "on-secondary-fixed": "#341100",
+                      "surface-tint": "#91db2a",
+                      "background": "#021520",
+                      "secondary": "#ffb690",
+                      "on-primary-fixed-variant": "#304f00",
+                      "on-background": "#d1e5f5",
+                      "inverse-primary": "#416900",
+                      "on-surface-variant": "#c1cab0",
+                      "on-error-container": "#ffdad6",
+                      "surface-variant": "#243743",
+                      "tertiary-container": "#45c4ff",
+                      "on-error": "#690005",
+                      "secondary-fixed": "#ffdbca",
+                      "on-secondary-container": "#4a1c00",
+                      "error-container": "#93000a",
+                      "surface-container-highest": "#243743"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {},
+              "fontFamily": {
+                      "headline": [
+                              "Inter"
+                      ],
+                      "body": [
+                              "Inter"
+                      ],
+                      "label": [
+                              "Inter"
+                      ]
+              }
+      },
+          },
+        }
+      </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: theme('colors.background');
+            color: theme('colors.on-background');
+        }
+        .font-jetbrains-mono {
+            font-family: 'JetBrains Mono', monospace;
+        }
+    </style>
+</head>
+<body class="bg-background min-h-screen flex flex-col">
+<!-- TopNavBar -->
+<nav class="bg-slate-950/70 backdrop-blur-xl docked full-width top-0 sticky z-50 flex justify-between items-center w-full px-8 py-4 max-w-screen-2xl mx-auto shadow-none border-none">
+<div class="text-2xl font-black tracking-tighter text-white uppercase font-inter tracking-tight">
+            DevTerminal
+        </div>
+<div class="hidden md:flex gap-8">
+<a class="text-white border-b-2 border-lime-500 pb-1 font-inter tracking-tight hover:bg-white/5 transition-all scale-95 duration-150 ease-in-out" href="#">Articles</a>
+<a class="text-slate-400 font-medium hover:text-white transition-colors font-inter tracking-tight hover:bg-white/5 transition-all scale-95 duration-150 ease-in-out" href="#">Tutorials</a>
+<a class="text-slate-400 font-medium hover:text-white transition-colors font-inter tracking-tight hover:bg-white/5 transition-all scale-95 duration-150 ease-in-out" href="#">Library</a>
+<a class="text-slate-400 font-medium hover:text-white transition-colors font-inter tracking-tight hover:bg-white/5 transition-all scale-95 duration-150 ease-in-out" href="#">Manifesto</a>
+</div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-lime-500 dark:text-lime-400 cursor-pointer hover:bg-white/5 transition-all scale-95 duration-150 ease-in-out p-2 rounded-full">account_circle</span>
+</div>
+</nav>
+<div class="flex-1 flex max-w-screen-2xl mx-auto w-full relative">
+<!-- SideNavBar -->
+<aside class="bg-[#0e222d] dark:bg-[#0e222d] h-screen w-64 rounded-r-2xl hidden lg:flex flex-col gap-4 p-6 fixed left-0 top-20 shadow-none">
+<div class="mb-6">
+<h2 class="text-lime-400 font-bold font-jetbrains-mono text-sm uppercase tracking-widest">Categories</h2>
+<p class="text-slate-400 text-xs mt-1">Filter by technology</p>
+</div>
+<nav class="flex flex-col gap-2">
+<a class="bg-lime-500 text-slate-950 rounded-lg font-bold flex items-center gap-3 p-3 font-jetbrains-mono text-sm uppercase tracking-widest hover:translate-x-1 transition-transform cubic-bezier(0.4,0,0.2,1) duration-150" href="#">
+<span class="material-symbols-outlined">speed</span>
+                    Latest
+                </a>
+<a class="text-slate-400 hover:text-white hover:bg-slate-800/50 rounded-lg flex items-center gap-3 p-3 font-jetbrains-mono text-sm uppercase tracking-widest hover:translate-x-1 transition-transform cubic-bezier(0.4,0,0.2,1) duration-150" href="#">
+<span class="material-symbols-outlined">bolt</span>
+                    Trending
+                </a>
+<a class="text-slate-400 hover:text-white hover:bg-slate-800/50 rounded-lg flex items-center gap-3 p-3 font-jetbrains-mono text-sm uppercase tracking-widest hover:translate-x-1 transition-transform cubic-bezier(0.4,0,0.2,1) duration-150" href="#">
+<span class="material-symbols-outlined">database</span>
+                    Back-end
+                </a>
+<a class="text-slate-400 hover:text-white hover:bg-slate-800/50 rounded-lg flex items-center gap-3 p-3 font-jetbrains-mono text-sm uppercase tracking-widest hover:translate-x-1 transition-transform cubic-bezier(0.4,0,0.2,1) duration-150" href="#">
+<span class="material-symbols-outlined">terminal</span>
+                    Front-end
+                </a>
+<a class="text-slate-400 hover:text-white hover:bg-slate-800/50 rounded-lg flex items-center gap-3 p-3 font-jetbrains-mono text-sm uppercase tracking-widest hover:translate-x-1 transition-transform cubic-bezier(0.4,0,0.2,1) duration-150" href="#">
+<span class="material-symbols-outlined">cloud</span>
+                    DevOps
+                </a>
+</nav>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 lg:ml-72 p-8 pt-24 min-h-screen">
+<!-- Sticky Search -->
+<div class="sticky top-24 z-40 bg-surface-container-low/80 backdrop-blur-xl p-4 rounded-xl mb-12 border border-white/5 flex items-center gap-4">
+<span class="material-symbols-outlined text-slate-400">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-white w-full font-jetbrains-mono placeholder-slate-500" placeholder="Search the void..." type="text"/>
+<button class="bg-primary text-on-primary px-4 py-2 rounded-md font-bold font-jetbrains-mono text-sm uppercase tracking-widest hover:bg-primary/90 transition-colors">Search</button>
+</div>
+<!-- Content Grid (Matter on Void) -->
+<div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+<!-- Card 1 -->
+<article class="bg-white text-surface p-xl rounded-xl shadow-[0_20px_40px_rgba(2,21,32,0.08)] flex flex-col justify-between hover:-translate-y-1 transition-transform duration-300">
+<div>
+<div class="flex justify-between items-start mb-4">
+<span class="font-jetbrains-mono text-xs text-on-surface-variant bg-surface-container-low px-2 py-1 rounded">Nov 12, 2024</span>
+<span class="material-symbols-outlined text-primary-container">bookmark</span>
+</div>
+<h3 class="font-headline text-2xl font-bold tracking-tight mb-4 leading-tight text-surface">The Death of the Monolith: Why Microservices Still Matter</h3>
+<p class="font-body text-base text-surface-variant leading-relaxed mb-6">Exploring the nuanced debate around microservices architecture in a post-serverless world, and why monolithic nostalgia might be premature.</p>
+</div>
+<div class="bg-on-primary-container p-4 rounded-lg mt-auto relative group">
+<span class="font-jetbrains-mono text-[10px] text-surface-variant absolute top-2 right-2">go</span>
+<pre class="font-jetbrains-mono text-sm text-outline-variant"><span class="text-lime-500">func</span> <span class="text-blue-400">handleRequest</span>(ctx context.Context) {
+  <span class="text-slate-400">// Keep it small</span>
+  service := <span class="text-yellow-400">"auth-v2"</span>
+}
+                        </pre>
+</div>
+<div class="mt-6 flex gap-2">
+<span class="font-jetbrains-mono text-xs text-primary-container border border-primary-container/30 px-2 py-1 rounded">Architecture</span>
+<span class="font-jetbrains-mono text-xs text-primary-container border border-primary-container/30 px-2 py-1 rounded">Go</span>
+</div>
+</article>
+<!-- Card 2 -->
+<article class="bg-white text-surface p-xl rounded-xl shadow-[0_20px_40px_rgba(2,21,32,0.08)] flex flex-col justify-between hover:-translate-y-1 transition-transform duration-300">
+<div>
+<div class="flex justify-between items-start mb-4">
+<span class="font-jetbrains-mono text-xs text-on-surface-variant bg-surface-container-low px-2 py-1 rounded">Nov 10, 2024</span>
+<span class="material-symbols-outlined text-slate-300">bookmark_border</span>
+</div>
+<h3 class="font-headline text-2xl font-bold tracking-tight mb-4 leading-tight text-surface">Rust for Node.js Developers: A Pragmatic Guide</h3>
+<p class="font-body text-base text-surface-variant leading-relaxed mb-6">Transitioning from dynamic to systems programming doesn't have to be painful. A practical bridge between paradigms.</p>
+</div>
+<div class="w-full h-40 bg-surface-container rounded-lg mb-4 overflow-hidden relative border border-outline-variant/15">
+<img alt="Code on a screen with dramatic lighting" class="w-full h-full object-cover opacity-80 mix-blend-luminosity" data-alt="close-up of computer screen showing lines of code with dramatic green and blue backlighting in a dark room" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAOSzrzoDqB2OM6Fh2B-luK59gin93cdw2i-OjBk6X-Fb-2gSnsNyh0WK25QjgbKJJfyaRMmbawbUtk26lGq3cxfysHsM2Fur9-d7W3z5pKaTlVoXPNRSkQX5vVYEuykx-pOdiGNIt2Axs4geT6HjkjDRR2sHC4W_7mCQcN0UVcrw43mE1Qs2ldttzpDqQjymnMRvnUoCTROL-vuudUtmUu4VcTuTL4uDtkxeKaqNbeTr_XzCriMnMphLWrfH4LrzMrhgC7kFeY4e4"/>
+</div>
+<div class="mt-auto flex gap-2">
+<span class="font-jetbrains-mono text-xs text-secondary-container border border-secondary-container/30 px-2 py-1 rounded">Rust</span>
+<span class="font-jetbrains-mono text-xs text-secondary-container border border-secondary-container/30 px-2 py-1 rounded">Node.js</span>
+</div>
+</article>
+<!-- Card 3 -->
+<article class="bg-white text-surface p-xl rounded-xl shadow-[0_20px_40px_rgba(2,21,32,0.08)] flex flex-col justify-between hover:-translate-y-1 transition-transform duration-300">
+<div>
+<div class="flex justify-between items-start mb-4">
+<span class="font-jetbrains-mono text-xs text-on-surface-variant bg-surface-container-low px-2 py-1 rounded">Nov 08, 2024</span>
+<span class="material-symbols-outlined text-slate-300">bookmark_border</span>
+</div>
+<h3 class="font-headline text-2xl font-bold tracking-tight mb-4 leading-tight text-surface">State Machines: The Unsung Heroes of UI Design</h3>
+<p class="font-body text-base text-surface-variant leading-relaxed mb-6">How explicit state management can solve the complexities of modern frontend architecture and prevent spaghetti code.</p>
+</div>
+<div class="bg-on-primary-container p-4 rounded-lg mt-auto relative group">
+<span class="font-jetbrains-mono text-[10px] text-surface-variant absolute top-2 right-2">ts</span>
+<pre class="font-jetbrains-mono text-sm text-outline-variant"><span class="text-lime-500">type</span> <span class="text-blue-400">State</span> = 
+  | <span class="text-yellow-400">'IDLE'</span>
+  | <span class="text-yellow-400">'LOADING'</span>
+  | <span class="text-yellow-400">'SUCCESS'</span>;
+                        </pre>
+</div>
+<div class="mt-6 flex gap-2">
+<span class="font-jetbrains-mono text-xs text-tertiary-container border border-tertiary-container/30 px-2 py-1 rounded">Frontend</span>
+<span class="font-jetbrains-mono text-xs text-tertiary-container border border-tertiary-container/30 px-2 py-1 rounded">TypeScript</span>
+</div>
+</article>
+<!-- Card 4 -->
+<article class="bg-white text-surface p-xl rounded-xl shadow-[0_20px_40px_rgba(2,21,32,0.08)] flex flex-col justify-between hover:-translate-y-1 transition-transform duration-300">
+<div>
+<div class="flex justify-between items-start mb-4">
+<span class="font-jetbrains-mono text-xs text-on-surface-variant bg-surface-container-low px-2 py-1 rounded">Nov 05, 2024</span>
+<span class="material-symbols-outlined text-slate-300">bookmark_border</span>
+</div>
+<h3 class="font-headline text-2xl font-bold tracking-tight mb-4 leading-tight text-surface">Kubernetes Hardening Tactics for 2025</h3>
+<p class="font-body text-base text-surface-variant leading-relaxed mb-6">A deep dive into securing your clusters against the next generation of supply chain attacks.</p>
+</div>
+<div class="w-full h-40 bg-surface-container rounded-lg mb-4 overflow-hidden relative border border-outline-variant/15">
+<img alt="Server rack" class="w-full h-full object-cover opacity-80 mix-blend-luminosity" data-alt="abstract view of glowing blue and green server racks in a dark data center environment" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA_gx8GjOCDQSB4uf1AE4ZS47fSgpJztt7xNkMgsa3FG5q1TaEZwqfiryjdbj70XW0DwZIXS4c1BlxAbSTsWnWWmBp63QFAR2SL7xT7aSqDE6snriNZMai86bEha4W6sUVp-OKhQ5OjNhJVJTzy3J3QgO4FIFtJmfKmNg1VwaNtg_3VL51UVhGUu2Z4FDoFYoDaZ4dyur7eNAGzBenUG8itvWTx_VvBx_6cuglzKE4uN-j8m0EWhO43VZeGZInJFH80qMgsUk3g4p8"/>
+</div>
+<div class="mt-auto flex gap-2">
+<span class="font-jetbrains-mono text-xs text-error border border-error/30 px-2 py-1 rounded">DevOps</span>
+<span class="font-jetbrains-mono text-xs text-error border border-error/30 px-2 py-1 rounded">Security</span>
+</div>
+</article>
+</div>
+</main>
+</div>
+<!-- Footer -->
+<footer class="bg-[#0e222d] dark:bg-[#0e222d] w-full py-12 px-8 flex flex-col md:flex-row justify-between items-center border-t border-white/5 mt-20 full-width shadow-none">
+<div class="text-white font-bold font-jetbrains-mono text-xs uppercase mb-4 md:mb-0">
+            © 2024 DevTerminal. Built for the void.
+        </div>
+<div class="flex gap-6">
+<a class="text-slate-500 hover:text-white font-jetbrains-mono text-xs uppercase hover:underline opacity-80 hover:opacity-100 transition-opacity" href="#">Privacy</a>
+<a class="text-slate-500 hover:text-white font-jetbrains-mono text-xs uppercase hover:underline opacity-80 hover:opacity-100 transition-opacity" href="#">Changelog</a>
+<a class="text-slate-500 hover:text-white font-jetbrains-mono text-xs uppercase hover:underline opacity-80 hover:opacity-100 transition-opacity" href="#">Documentation</a>
+<a class="text-slate-500 hover:text-white font-jetbrains-mono text-xs uppercase hover:underline opacity-80 hover:opacity-100 transition-opacity" href="#">Status</a>
+</div>
+</footer>
+</body></html>
+
+<!-- Home Page -->
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DevTerminal</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&amp;family=JetBrains+Mono:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "tertiary": "#a1dbff",
+                      "surface": "#021520",
+                      "on-secondary-fixed-variant": "#783200",
+                      "surface-dim": "#021520",
+                      "secondary-container": "#ec6a06",
+                      "primary-fixed-dim": "#91db2a",
+                      "on-tertiary-container": "#004f6c",
+                      "surface-container-lowest": "#00101a",
+                      "on-primary": "#1f3700",
+                      "on-primary-fixed": "#102000",
+                      "outline-variant": "#424936",
+                      "tertiary-fixed-dim": "#7bd0ff",
+                      "surface-bright": "#293b47",
+                      "primary-fixed": "#acf847",
+                      "inverse-on-surface": "#20333e",
+                      "surface-container-low": "#091e29",
+                      "on-surface": "#d1e5f5",
+                      "primary-container": "#84cc16",
+                      "tertiary-fixed": "#c4e7ff",
+                      "outline": "#8b947d",
+                      "on-tertiary-fixed-variant": "#004c69",
+                      "inverse-surface": "#d1e5f5",
+                      "on-primary-container": "#315200",
+                      "primary": "#9ee939",
+                      "on-tertiary-fixed": "#001e2c",
+                      "on-secondary": "#552100",
+                      "surface-container": "#0e222d",
+                      "secondary-fixed-dim": "#ffb690",
+                      "error": "#ffb4ab",
+                      "surface-container-high": "#192c38",
+                      "on-tertiary": "#00354a",
+                      "on-secondary-fixed": "#341100",
+                      "surface-tint": "#91db2a",
+                      "background": "#021520",
+                      "secondary": "#ffb690",
+                      "on-primary-fixed-variant": "#304f00",
+                      "on-background": "#d1e5f5",
+                      "inverse-primary": "#416900",
+                      "on-surface-variant": "#c1cab0",
+                      "on-error-container": "#ffdad6",
+                      "surface-variant": "#243743",
+                      "tertiary-container": "#45c4ff",
+                      "on-error": "#690005",
+                      "secondary-fixed": "#ffdbca",
+                      "on-secondary-container": "#4a1c00",
+                      "error-container": "#93000a",
+                      "surface-container-highest": "#243743"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "fontFamily": {
+                      "headline": ["Inter"],
+                      "body": ["Inter"],
+                      "label": ["Inter"],
+                      "mono": ["JetBrains Mono", "monospace"]
+              }
+      },
+          },
+        }
+      </script>
+<style>
+        .font-inter { font-family: 'Inter', sans-serif; }
+        .font-jetbrains-mono { font-family: 'JetBrains Mono', monospace; }
+        body { background-image: radial-gradient(circle at 50% 0%, #0e222d 0%, #021520 70%); background-attachment: fixed; }
+      </style>
+</head>
+<body class="bg-background text-on-background min-h-screen font-body flex flex-col">
+<!-- TopNavBar (JSON) -->
+<nav class="bg-slate-950/70 backdrop-blur-xl font-inter tracking-tight docked full-width top-0 sticky z-50 flex justify-between items-center w-full px-8 py-4 max-w-screen-2xl mx-auto border-none no-line-rule tonal-shift flat no shadows">
+<div class="text-2xl font-black tracking-tighter text-white uppercase">
+            DevTerminal
+        </div>
+<div class="hidden md:flex items-center gap-8">
+<a class="text-white border-b-2 border-lime-500 pb-1 hover:bg-white/5 transition-all scale-95 duration-150 ease-in-out" href="#">Articles</a>
+<a class="text-slate-400 font-medium hover:text-white transition-colors hover:bg-white/5 transition-all scale-95 duration-150 ease-in-out" href="#">Tutorials</a>
+<a class="text-slate-400 font-medium hover:text-white transition-colors hover:bg-white/5 transition-all scale-95 duration-150 ease-in-out" href="#">Library</a>
+<a class="text-slate-400 font-medium hover:text-white transition-colors hover:bg-white/5 transition-all scale-95 duration-150 ease-in-out" href="#">Manifesto</a>
+</div>
+<div class="flex items-center gap-4 text-lime-500 dark:text-lime-400">
+<button class="hover:bg-white/5 p-2 rounded-full transition-all scale-95 duration-150 ease-in-out">
+<span class="material-symbols-outlined">account_circle</span>
+</button>
+</div>
+</nav>
+<div class="flex flex-1 max-w-screen-2xl mx-auto w-full relative">
+<!-- SideNavBar (JSON) - Hidden on Mobile -->
+<aside class="bg-[#0e222d] dark:bg-[#0e222d] h-screen w-64 rounded-r-2xl tonal-layering against-void flat hidden lg:flex flex-col gap-4 p-6 fixed left-0 top-20 z-40 font-jetbrains-mono text-sm uppercase tracking-widest">
+<div class="mb-8">
+<h2 class="text-lime-400 font-bold mb-1">Categories</h2>
+<p class="text-slate-400 text-xs normal-case tracking-normal">Filter by technology</p>
+</div>
+<nav class="flex flex-col gap-2">
+<a class="bg-lime-500 text-slate-950 rounded-lg font-bold flex items-center gap-3 p-3 hover:translate-x-1 transition-transform cubic-bezier(0.4,0,0.2,1) duration-150" href="#">
+<span class="material-symbols-outlined">speed</span>
+                    Latest
+                </a>
+<a class="text-slate-400 hover:text-white hover:bg-slate-800/50 flex items-center gap-3 p-3 rounded-lg hover:translate-x-1 transition-transform cubic-bezier(0.4,0,0.2,1) duration-150" href="#">
+<span class="material-symbols-outlined">bolt</span>
+                    Trending
+                </a>
+<a class="text-slate-400 hover:text-white hover:bg-slate-800/50 flex items-center gap-3 p-3 rounded-lg hover:translate-x-1 transition-transform cubic-bezier(0.4,0,0.2,1) duration-150" href="#">
+<span class="material-symbols-outlined">database</span>
+                    Back-end
+                </a>
+<a class="text-slate-400 hover:text-white hover:bg-slate-800/50 flex items-center gap-3 p-3 rounded-lg hover:translate-x-1 transition-transform cubic-bezier(0.4,0,0.2,1) duration-150" href="#">
+<span class="material-symbols-outlined">terminal</span>
+                    Front-end
+                </a>
+<a class="text-slate-400 hover:text-white hover:bg-slate-800/50 flex items-center gap-3 p-3 rounded-lg hover:translate-x-1 transition-transform cubic-bezier(0.4,0,0.2,1) duration-150" href="#">
+<span class="material-symbols-outlined">cloud</span>
+                    DevOps
+                </a>
+</nav>
+</aside>
+<!-- Main Content -->
+<main class="flex-1 lg:ml-64 w-full px-6 md:px-12 py-12">
+<!-- Hero Section -->
+<section class="mb-20 text-center max-w-3xl mx-auto mt-10">
+<h1 class="text-5xl md:text-7xl font-black font-headline tracking-tight text-white mb-6 leading-tight">
+                    Master the <br/>
+<span class="text-primary">Machine.</span>
+</h1>
+<p class="text-lg md:text-xl text-on-surface-variant font-body mb-10 leading-relaxed">
+                    Advanced tutorials, system architecture breakdowns, and unfiltered thoughts on modern software engineering.
+                </p>
+<div class="relative max-w-xl mx-auto">
+<div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-outline">search</span>
+</div>
+<input class="w-full bg-surface-container-low border border-outline-variant/30 text-white rounded-lg pl-12 pr-4 py-4 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors font-body" placeholder="Search articles, tags, or concepts..." type="text"/>
+</div>
+</section>
+<!-- Article Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<!-- Card 1 -->
+<article class="bg-white rounded-xl p-8 relative flex flex-col group hover:-translate-y-1 transition-transform duration-300" style="box-shadow: 0 20px 40px rgba(2, 21, 32, 0.08);">
+<div class="mb-4 flex justify-between items-start">
+<div class="flex gap-2">
+<span class="text-xs font-mono bg-surface-container text-primary px-2 py-1 rounded">Architecture</span>
+<span class="text-xs font-mono bg-surface-container text-primary px-2 py-1 rounded">Go</span>
+</div>
+<span class="text-xs font-mono text-outline">Oct 24, 2024</span>
+</div>
+<h3 class="text-2xl font-bold font-headline tracking-tight text-surface mb-3 group-hover:text-primary transition-colors">Designing Resilient Microservices</h3>
+<p class="text-surface-variant font-body mb-6 flex-1 leading-relaxed">
+                        A deep dive into circuit breakers, retry mechanisms, and graceful degradation patterns in distributed systems using Go.
+                    </p>
+<!-- Code Preview Block -->
+<div class="bg-on-primary-container rounded-lg p-4 font-mono text-sm relative overflow-hidden group/code">
+<span class="absolute top-2 right-2 text-[10px] text-muted opacity-50">main.go</span>
+<pre><code class="text-outline-variant"><span class="text-[#38bdf8]">func</span> <span class="text-[#facc15]">ExecuteWithRetry</span>(ctx <span class="text-[#22c55e]">context.Context</span>) <span class="text-[#22c55e]">error</span> {
+    <span class="text-[#64748b]">// Implement exponential backoff</span>
+    <span class="text-[#38bdf8]">return</span> cb.<span class="text-[#facc15]">Execute</span>(<span class="text-[#38bdf8]">func</span>() <span class="text-[#22c55e]">error</span> { ... })
+}</code></pre>
+</div>
+</article>
+<!-- Card 2 -->
+<article class="bg-white rounded-xl p-8 relative flex flex-col group hover:-translate-y-1 transition-transform duration-300" style="box-shadow: 0 20px 40px rgba(2, 21, 32, 0.08);">
+<div class="mb-4 flex justify-between items-start">
+<div class="flex gap-2">
+<span class="text-xs font-mono bg-surface-container text-primary px-2 py-1 rounded">React</span>
+<span class="text-xs font-mono bg-surface-container text-primary px-2 py-1 rounded">Performance</span>
+</div>
+<span class="text-xs font-mono text-outline">Oct 20, 2024</span>
+</div>
+<h3 class="text-2xl font-bold font-headline tracking-tight text-surface mb-3 group-hover:text-primary transition-colors">The Cost of Unnecessary Re-renders</h3>
+<p class="text-surface-variant font-body mb-6 flex-1 leading-relaxed">
+                        Why your React app feels sluggish and how to aggressively memoize expensive component trees to hit 60fps.
+                    </p>
+<!-- Code Preview Block -->
+<div class="bg-on-primary-container rounded-lg p-4 font-mono text-sm relative overflow-hidden group/code">
+<span class="absolute top-2 right-2 text-[10px] text-muted opacity-50">App.tsx</span>
+<pre><code class="text-outline-variant"><span class="text-[#38bdf8]">const</span> MemoizedList = React.<span class="text-[#facc15]">memo</span>(({ items }) <span class="text-[#38bdf8]">=&gt;</span> {
+    <span class="text-[#64748b]">// Only re-renders if items prop changes</span>
+    <span class="text-[#38bdf8]">return</span> items.<span class="text-[#facc15]">map</span>(item <span class="text-[#38bdf8]">=&gt;</span> &lt;ListItem key={item.id} /&gt;);
+});</code></pre>
+</div>
+</article>
+<!-- Card 3 -->
+<article class="bg-white rounded-xl p-8 relative flex flex-col group hover:-translate-y-1 transition-transform duration-300" style="box-shadow: 0 20px 40px rgba(2, 21, 32, 0.08);">
+<div class="mb-4 flex justify-between items-start">
+<div class="flex gap-2">
+<span class="text-xs font-mono bg-surface-container text-primary px-2 py-1 rounded">Database</span>
+<span class="text-xs font-mono bg-surface-container text-primary px-2 py-1 rounded">SQL</span>
+</div>
+<span class="text-xs font-mono text-outline">Oct 15, 2024</span>
+</div>
+<h3 class="text-2xl font-bold font-headline tracking-tight text-surface mb-3 group-hover:text-primary transition-colors">Mastering PostgreSQL Indexes</h3>
+<p class="text-surface-variant font-body mb-6 flex-1 leading-relaxed">
+                        Beyond simple B-Trees: understanding BRIN, GiST, and partial indexes to optimize massive analytical queries.
+                    </p>
+<!-- Code Preview Block -->
+<div class="bg-on-primary-container rounded-lg p-4 font-mono text-sm relative overflow-hidden group/code">
+<span class="absolute top-2 right-2 text-[10px] text-muted opacity-50">query.sql</span>
+<pre><code class="text-outline-variant"><span class="text-[#38bdf8]">CREATE INDEX</span> idx_active_users 
+<span class="text-[#38bdf8]">ON</span> users (last_login) 
+<span class="text-[#38bdf8]">WHERE</span> status = <span class="text-[#facc15]">'active'</span>; <span class="text-[#64748b]">-- Partial index</span></code></pre>
+</div>
+</article>
+<!-- Card 4 -->
+<article class="bg-white rounded-xl p-8 relative flex flex-col group hover:-translate-y-1 transition-transform duration-300" style="box-shadow: 0 20px 40px rgba(2, 21, 32, 0.08);">
+<div class="mb-4 flex justify-between items-start">
+<div class="flex gap-2">
+<span class="text-xs font-mono bg-surface-container text-primary px-2 py-1 rounded">DevOps</span>
+<span class="text-xs font-mono bg-surface-container text-primary px-2 py-1 rounded">Docker</span>
+</div>
+<span class="text-xs font-mono text-outline">Oct 10, 2024</span>
+</div>
+<h3 class="text-2xl font-bold font-headline tracking-tight text-surface mb-3 group-hover:text-primary transition-colors">Distroless Docker Images</h3>
+<p class="text-surface-variant font-body mb-6 flex-1 leading-relaxed">
+                        Reducing your attack surface and image size by removing the OS shell and package managers from production builds.
+                    </p>
+<!-- Code Preview Block -->
+<div class="bg-on-primary-container rounded-lg p-4 font-mono text-sm relative overflow-hidden group/code">
+<span class="absolute top-2 right-2 text-[10px] text-muted opacity-50">Dockerfile</span>
+<pre><code class="text-outline-variant"><span class="text-[#38bdf8]">FROM</span> gcr.io/distroless/static-debian11
+<span class="text-[#38bdf8]">COPY</span> --from=build /go/bin/app /
+<span class="text-[#38bdf8]">CMD</span> [<span class="text-[#facc15]">"/app"</span>]</code></pre>
+</div>
+</article>
+</div>
+<div class="mt-16 text-center">
+<button class="bg-primary text-on-primary font-bold px-8 py-3 rounded-lg hover:bg-primary-fixed transition-colors inline-flex items-center gap-2">
+                    Load More <span class="material-symbols-outlined text-sm">arrow_downward</span>
+</button>
+</div>
+</main>
+</div>
+<!-- Footer (JSON) -->
+<footer class="bg-[#0e222d] dark:bg-[#0e222d] font-jetbrains-mono text-xs uppercase full-width border-t-0 mt-20 tonal-shift background-shift flat w-full py-12 px-8 flex flex-col md:flex-row justify-between items-center border-t border-white/5 relative z-10">
+<div class="text-white font-bold mb-6 md:mb-0">
+            © 2024 DevTerminal. Built for the void.
+        </div>
+<div class="flex gap-6">
+<a class="text-slate-500 hover:text-white hover:underline opacity-80 hover:opacity-100 transition-opacity" href="#">Privacy</a>
+<a class="text-slate-500 hover:text-white hover:underline opacity-80 hover:opacity-100 transition-opacity" href="#">Changelog</a>
+<a class="text-slate-500 hover:text-white hover:underline opacity-80 hover:opacity-100 transition-opacity" href="#">Documentation</a>
+<a class="text-slate-500 hover:text-white hover:underline opacity-80 hover:opacity-100 transition-opacity" href="#">Status</a>
+</div>
+</footer>
+</body></html>
+
+<!-- UI Kit -->
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>DevTerminal - UI Kit</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;family=JetBrains+Mono:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "tertiary": "#a1dbff",
+                        "surface": "#021520",
+                        "on-secondary-fixed-variant": "#783200",
+                        "surface-dim": "#021520",
+                        "secondary-container": "#ec6a06",
+                        "primary-fixed-dim": "#91db2a",
+                        "on-tertiary-container": "#004f6c",
+                        "surface-container-lowest": "#00101a",
+                        "on-primary": "#1f3700",
+                        "on-primary-fixed": "#102000",
+                        "outline-variant": "#424936",
+                        "tertiary-fixed-dim": "#7bd0ff",
+                        "surface-bright": "#293b47",
+                        "primary-fixed": "#acf847",
+                        "inverse-on-surface": "#20333e",
+                        "surface-container-low": "#091e29",
+                        "on-surface": "#d1e5f5",
+                        "primary-container": "#84cc16",
+                        "tertiary-fixed": "#c4e7ff",
+                        "outline": "#8b947d",
+                        "on-tertiary-fixed-variant": "#004c69",
+                        "inverse-surface": "#d1e5f5",
+                        "on-primary-container": "#315200",
+                        "primary": "#9ee939",
+                        "on-tertiary-fixed": "#001e2c",
+                        "on-secondary": "#552100",
+                        "surface-container": "#0e222d",
+                        "secondary-fixed-dim": "#ffb690",
+                        "error": "#ffb4ab",
+                        "surface-container-high": "#192c38",
+                        "on-tertiary": "#00354a",
+                        "on-secondary-fixed": "#341100",
+                        "surface-tint": "#91db2a",
+                        "background": "#021520",
+                        "secondary": "#ffb690",
+                        "on-primary-fixed-variant": "#304f00",
+                        "on-background": "#d1e5f5",
+                        "inverse-primary": "#416900",
+                        "on-surface-variant": "#c1cab0",
+                        "on-error-container": "#ffdad6",
+                        "surface-variant": "#243743",
+                        "tertiary-container": "#45c4ff",
+                        "on-error": "#690005",
+                        "secondary-fixed": "#ffdbca",
+                        "on-secondary-container": "#4a1c00",
+                        "error-container": "#93000a",
+                        "surface-container-highest": "#243743"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "md": "12px",
+                        "lg": "0.5rem",
+                        "xl": "1.5rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Inter", "sans-serif"],
+                        "body": ["Inter", "sans-serif"],
+                        "label": ["Inter", "sans-serif"],
+                        "mono": ["JetBrains Mono", "monospace"]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined[data-weight="fill"] {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .backdrop-blur-custom {
+            backdrop-filter: blur(20px);
+        }
+        .shadow-ambient {
+            box-shadow: 0 20px 40px rgba(2, 21, 32, 0.08);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body min-h-screen antialiased selection:bg-primary-container selection:text-on-primary-container overflow-x-hidden">
+<!-- TopNavBar -->
+<nav class="bg-slate-950/70 backdrop-blur-xl docked full-width top-0 sticky z-50 flex justify-between items-center w-full px-8 py-4 max-w-screen-2xl mx-auto border-b border-surface-container-highest">
+<div class="text-2xl font-black tracking-tighter text-white uppercase font-headline">DevTerminal</div>
+<!-- Navigation Links (Web) -->
+<div class="hidden md:flex gap-8 items-center">
+<a class="text-slate-400 font-medium hover:text-white transition-colors" href="#">Articles</a>
+<a class="text-slate-400 font-medium hover:text-white transition-colors" href="#">Tutorials</a>
+<a class="text-white border-b-2 border-lime-500 pb-1" href="#">Library</a>
+<a class="text-slate-400 font-medium hover:text-white transition-colors" href="#">Manifesto</a>
+</div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-lime-500 dark:text-lime-400 cursor-pointer hover:bg-white/5 transition-all p-2 rounded-full scale-95 duration-150 ease-in-out">search</span>
+<span class="material-symbols-outlined text-lime-500 dark:text-lime-400 cursor-pointer hover:bg-white/5 transition-all p-2 rounded-full scale-95 duration-150 ease-in-out">account_circle</span>
+</div>
+</nav>
+<div class="max-w-screen-2xl mx-auto w-full flex relative">
+<!-- SideNavBar -->
+<aside class="hidden lg:flex flex-col gap-4 p-6 fixed left-0 top-20 bg-[#0e222d] dark:bg-[#0e222d] h-screen w-64 rounded-r-2xl border-r border-surface-container-highest z-40">
+<div class="mb-8">
+<h3 class="text-lime-400 font-bold font-headline mb-1">Categories</h3>
+<p class="text-xs text-slate-400 font-mono">Filter by technology</p>
+</div>
+<nav class="flex flex-col gap-2 font-mono text-sm uppercase tracking-widest">
+<a class="flex items-center gap-3 p-3 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800/50 hover:translate-x-1 transition-transform" href="#" style="transition-timing-function: cubic-bezier(0.4,0,0.2,1); transition-duration: 150ms;">
+<span class="material-symbols-outlined text-lg">speed</span>
+                    Latest
+                </a>
+<a class="flex items-center gap-3 p-3 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800/50 hover:translate-x-1 transition-transform" href="#" style="transition-timing-function: cubic-bezier(0.4,0,0.2,1); transition-duration: 150ms;">
+<span class="material-symbols-outlined text-lg">bolt</span>
+                    Trending
+                </a>
+<a class="flex items-center gap-3 p-3 bg-lime-500 text-slate-950 rounded-lg font-bold hover:translate-x-1 transition-transform" href="#" style="transition-timing-function: cubic-bezier(0.4,0,0.2,1); transition-duration: 150ms;">
+<span class="material-symbols-outlined text-lg">database</span>
+                    Back-end
+                </a>
+<a class="flex items-center gap-3 p-3 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800/50 hover:translate-x-1 transition-transform" href="#" style="transition-timing-function: cubic-bezier(0.4,0,0.2,1); transition-duration: 150ms;">
+<span class="material-symbols-outlined text-lg">terminal</span>
+                    Front-end
+                </a>
+<a class="flex items-center gap-3 p-3 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800/50 hover:translate-x-1 transition-transform" href="#" style="transition-timing-function: cubic-bezier(0.4,0,0.2,1); transition-duration: 150ms;">
+<span class="material-symbols-outlined text-lg">cloud</span>
+                    DevOps
+                </a>
+</nav>
+</aside>
+<!-- Main Content -->
+<main class="w-full lg:ml-64 p-8 pt-12 min-h-screen">
+<header class="mb-16">
+<h1 class="text-5xl font-black font-headline tracking-tighter text-white mb-4">UI Kit</h1>
+<p class="text-xl text-on-surface-variant font-medium">Design system components for The Illuminated Terminal.</p>
+</header>
+<div class="grid grid-cols-1 xl:grid-cols-2 gap-16">
+<!-- Left Column -->
+<div class="space-y-16">
+<!-- Typography -->
+<section>
+<h2 class="text-2xl font-bold font-headline text-primary mb-8 border-b border-surface-container-highest pb-4">Typography</h2>
+<div class="space-y-8 bg-surface-container-low p-8 rounded-xl">
+<div>
+<p class="text-sm font-mono text-outline mb-2">Display Large (Inter)</p>
+<h1 class="text-6xl font-black font-headline tracking-tighter text-white">The Void &amp; Matter</h1>
+</div>
+<div>
+<p class="text-sm font-mono text-outline mb-2">Headline Large (Inter)</p>
+<h2 class="text-4xl font-bold font-headline tracking-tight text-white">Editorial Hacker Aesthetic</h2>
+</div>
+<div>
+<p class="text-sm font-mono text-outline mb-2">Body Large (Inter)</p>
+<p class="text-lg leading-relaxed text-on-surface">This design system is built on the high-contrast tension between the deep, silent void of a developer's night-time environment and the brilliant, sharp clarity of a high-performance code editor.</p>
+</div>
+<div>
+<p class="text-sm font-mono text-outline mb-2">Monospace (JetBrains Mono)</p>
+<p class="font-mono text-sm text-primary-container">const system = new HighContrastUI();</p>
+</div>
+</div>
+</section>
+<!-- Buttons & Interactive -->
+<section>
+<h2 class="text-2xl font-bold font-headline text-primary mb-8 border-b border-surface-container-highest pb-4">Buttons &amp; Interactive</h2>
+<div class="flex flex-wrap gap-6 bg-surface-container-low p-8 rounded-xl items-center">
+<!-- Primary Button -->
+<button class="bg-primary text-on-primary font-bold px-6 py-3 rounded-md hover:bg-primary-fixed hover:scale-105 transition-all duration-150 ease-in-out">
+                                Execute Code
+                            </button>
+<!-- Secondary Button -->
+<button class="bg-transparent text-secondary-container font-bold px-6 py-3 rounded-md border border-outline-variant hover:bg-surface-bright transition-all duration-150 ease-in-out">
+                                View Logs
+                            </button>
+<!-- Icon Button -->
+<button class="bg-surface-bright text-white p-3 rounded-full hover:bg-primary hover:text-on-primary transition-colors duration-150">
+<span class="material-symbols-outlined">terminal</span>
+</button>
+<!-- Tag -->
+<span class="bg-surface-container text-primary-container font-mono text-xs px-3 py-1 rounded-full border border-surface-container-highest">
+                                #frontend
+                            </span>
+</div>
+</section>
+<!-- Inputs -->
+<section>
+<h2 class="text-2xl font-bold font-headline text-primary mb-8 border-b border-surface-container-highest pb-4">Forms &amp; Inputs</h2>
+<div class="space-y-6 bg-surface-container-low p-8 rounded-xl">
+<!-- Search Input -->
+<div>
+<label class="block text-sm font-mono text-outline mb-2">Global Search</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline">search</span>
+<input class="w-full bg-surface border border-outline-variant/50 rounded-md py-3 pl-12 pr-4 text-white placeholder-outline focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all duration-150 bg-opacity-50" placeholder="Search the void..." type="text"/>
+</div>
+</div>
+<!-- Text Area -->
+<div>
+<label class="block text-sm font-mono text-outline mb-2">Console Input</label>
+<textarea class="w-full bg-surface border border-outline-variant/50 rounded-md p-4 text-white placeholder-outline focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all duration-150 font-mono text-sm bg-opacity-50" placeholder="Enter query..." rows="4"></textarea>
+</div>
+</div>
+</section>
+</div>
+<!-- Right Column -->
+<div class="space-y-16">
+<!-- Colors -->
+<section>
+<h2 class="text-2xl font-bold font-headline text-primary mb-8 border-b border-surface-container-highest pb-4">Color Palette</h2>
+<div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+<div class="flex flex-col">
+<div class="h-20 bg-background rounded-t-xl border border-surface-container-highest border-b-0"></div>
+<div class="bg-surface-container-low p-3 rounded-b-xl border border-surface-container-highest border-t-0">
+<p class="text-sm font-bold text-white">Background</p>
+<p class="text-xs font-mono text-outline">#021520</p>
+</div>
+</div>
+<div class="flex flex-col">
+<div class="h-20 bg-surface-container rounded-t-xl"></div>
+<div class="bg-surface-container-low p-3 rounded-b-xl">
+<p class="text-sm font-bold text-white">Surface</p>
+<p class="text-xs font-mono text-outline">#0e222d</p>
+</div>
+</div>
+<div class="flex flex-col">
+<div class="h-20 bg-white rounded-t-xl"></div>
+<div class="bg-surface-container-low p-3 rounded-b-xl">
+<p class="text-sm font-bold text-white">Canvas</p>
+<p class="text-xs font-mono text-outline">#ffffff</p>
+</div>
+</div>
+<div class="flex flex-col">
+<div class="h-20 bg-primary rounded-t-xl"></div>
+<div class="bg-surface-container-low p-3 rounded-b-xl">
+<p class="text-sm font-bold text-primary">Primary</p>
+<p class="text-xs font-mono text-outline">#9ee939</p>
+</div>
+</div>
+<div class="flex flex-col">
+<div class="h-20 bg-secondary-container rounded-t-xl"></div>
+<div class="bg-surface-container-low p-3 rounded-b-xl">
+<p class="text-sm font-bold text-secondary-container">Accent</p>
+<p class="text-xs font-mono text-outline">#ec6a06</p>
+</div>
+</div>
+<div class="flex flex-col">
+<div class="h-20 bg-surface-bright rounded-t-xl"></div>
+<div class="bg-surface-container-low p-3 rounded-b-xl">
+<p class="text-sm font-bold text-white">Bright</p>
+<p class="text-xs font-mono text-outline">#293b47</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Code Block -->
+<section>
+<h2 class="text-2xl font-bold font-headline text-primary mb-8 border-b border-surface-container-highest pb-4">The Signature Component</h2>
+<div class="bg-on-primary-container rounded-xl overflow-hidden shadow-ambient relative group border border-surface-container-highest/30">
+<div class="bg-surface-container-lowest px-4 py-2 flex justify-between items-center border-b border-surface-container-highest/30">
+<div class="flex gap-2">
+<div class="w-3 h-3 rounded-full bg-error/50"></div>
+<div class="w-3 h-3 rounded-full bg-secondary/50"></div>
+<div class="w-3 h-3 rounded-full bg-primary/50"></div>
+</div>
+<span class="font-mono text-xs text-outline">typescript</span>
+</div>
+<div class="p-6 font-mono text-sm leading-relaxed overflow-x-auto text-outline-variant">
+<pre><code><span class="text-blue-400">async function</span> <span class="text-yellow-400">fetchVoidData</span>() {
+  <span class="text-slate-500">// Initialize connection to the deep void</span>
+  <span class="text-lime-500">const</span> endpoint = <span class="text-yellow-200">'api/v1/dark-matter'</span>;
+  
+  <span class="text-blue-400">try</span> {
+    <span class="text-lime-500">const</span> response = <span class="text-blue-400">await</span> fetch(endpoint);
+    <span class="text-blue-400">if</span> (!response.ok) <span class="text-blue-400">throw new</span> <span class="text-yellow-400">Error</span>(<span class="text-yellow-200">'Void unreadable'</span>);
+    
+    <span class="text-lime-500">return await</span> response.json();
+  } <span class="text-blue-400">catch</span> (err) {
+    console.error(<span class="text-yellow-200">'Failed to parse matter:'</span>, err);
+  }
+}</code></pre>
+</div>
+<button class="absolute top-12 right-4 opacity-0 group-hover:opacity-100 transition-opacity bg-surface-bright text-white p-2 rounded-md border border-outline-variant/30 hover:bg-surface-container-highest">
+<span class="material-symbols-outlined text-sm">content_copy</span>
+</button>
+</div>
+</section>
+<!-- Content Cards -->
+<section>
+<h2 class="text-2xl font-bold font-headline text-primary mb-8 border-b border-surface-container-highest pb-4">Content Surfaces</h2>
+<div class="space-y-8">
+<!-- Article Card -->
+<article class="bg-white rounded-xl p-8 shadow-ambient hover:-translate-y-1 transition-transform duration-300 relative overflow-hidden group border border-transparent hover:border-outline-variant/20">
+<div class="absolute top-0 left-0 w-1 h-full bg-primary-container transform origin-bottom scale-y-0 group-hover:scale-y-100 transition-transform duration-300 ease-out"></div>
+<div class="flex items-center gap-3 mb-6">
+<span class="font-mono text-xs text-primary-container bg-surface-container-low px-2 py-1 rounded">ARCHITECTURE</span>
+<span class="font-mono text-xs text-slate-400">OCT 24, 2024</span>
+</div>
+<h3 class="text-3xl font-bold font-headline text-surface-container-lowest mb-4 tracking-tight">Deconstructing the Monolith: A Guide to Microservices</h3>
+<p class="text-surface-container-low font-body leading-relaxed mb-6">Explore the strategies and pitfalls of breaking down large legacy applications into scalable, independent services without losing your mind.</p>
+<a class="inline-flex items-center gap-2 text-primary-container font-bold hover:text-primary transition-colors" href="#">
+                                    Read Article <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</a>
+</article>
+<!-- Empty State Card -->
+<div class="bg-surface-container rounded-xl p-12 text-center border-2 border-dashed border-surface-container-highest flex flex-col items-center justify-center">
+<span class="material-symbols-outlined text-4xl text-outline mb-4">folder_open</span>
+<h3 class="text-xl font-bold text-white mb-2">No Artifacts Found</h3>
+<p class="text-outline text-sm mb-6 max-w-sm">The void is empty here. Try adjusting your search filters or executing a new query to locate matter.</p>
+<button class="bg-surface-bright text-white font-bold px-6 py-2 rounded-md border border-outline-variant/50 hover:bg-surface-container-highest transition-colors text-sm">
+                                    Clear Filters
+                                </button>
+</div>
+</div>
+</section>
+</div>
+</div>
+</main>
+</div>
+<!-- Footer -->
+<footer class="bg-[#0e222d] dark:bg-[#0e222d] full-width border-t-0 mt-20 w-full py-12 px-8 flex flex-col md:flex-row justify-between items-center border-t border-white/5 relative z-10">
+<div class="text-white font-bold mb-6 md:mb-0 font-headline">DevTerminal</div>
+<div class="flex gap-6 mb-6 md:mb-0">
+<a class="text-slate-500 hover:text-white font-jetbrains-mono text-xs uppercase hover:underline opacity-80 hover:opacity-100 transition-opacity" href="#">Privacy</a>
+<a class="text-slate-500 hover:text-white font-jetbrains-mono text-xs uppercase hover:underline opacity-80 hover:opacity-100 transition-opacity" href="#">Changelog</a>
+<a class="text-lime-400 font-jetbrains-mono text-xs uppercase hover:underline opacity-80 hover:opacity-100 transition-opacity" href="#">Documentation</a>
+<a class="text-slate-500 hover:text-white font-jetbrains-mono text-xs uppercase hover:underline opacity-80 hover:opacity-100 transition-opacity" href="#">Status</a>
+</div>
+<div class="text-slate-400 font-jetbrains-mono text-xs uppercase">
+            © 2024 DevTerminal. Built for the void.
+        </div>
+</footer>
+</body></html>
+
+<!-- Article Page -->
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Article Detail - DevTerminal</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&amp;family=JetBrains+Mono:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "tertiary": "#a1dbff",
+                    "surface": "#021520",
+                    "on-secondary-fixed-variant": "#783200",
+                    "surface-dim": "#021520",
+                    "secondary-container": "#ec6a06",
+                    "primary-fixed-dim": "#91db2a",
+                    "on-tertiary-container": "#004f6c",
+                    "surface-container-lowest": "#00101a",
+                    "on-primary": "#1f3700",
+                    "on-primary-fixed": "#102000",
+                    "outline-variant": "#424936",
+                    "tertiary-fixed-dim": "#7bd0ff",
+                    "surface-bright": "#293b47",
+                    "primary-fixed": "#acf847",
+                    "inverse-on-surface": "#20333e",
+                    "surface-container-low": "#091e29",
+                    "on-surface": "#d1e5f5",
+                    "primary-container": "#84cc16",
+                    "tertiary-fixed": "#c4e7ff",
+                    "outline": "#8b947d",
+                    "on-tertiary-fixed-variant": "#004c69",
+                    "inverse-surface": "#d1e5f5",
+                    "on-primary-container": "#315200",
+                    "primary": "#9ee939",
+                    "on-tertiary-fixed": "#001e2c",
+                    "on-secondary": "#552100",
+                    "surface-container": "#0e222d",
+                    "secondary-fixed-dim": "#ffb690",
+                    "error": "#ffb4ab",
+                    "surface-container-high": "#192c38",
+                    "on-tertiary": "#00354a",
+                    "on-secondary-fixed": "#341100",
+                    "surface-tint": "#91db2a",
+                    "background": "#021520",
+                    "secondary": "#ffb690",
+                    "on-primary-fixed-variant": "#304f00",
+                    "on-background": "#d1e5f5",
+                    "inverse-primary": "#416900",
+                    "on-surface-variant": "#c1cab0",
+                    "on-error-container": "#ffdad6",
+                    "surface-variant": "#243743",
+                    "tertiary-container": "#45c4ff",
+                    "on-error": "#690005",
+                    "secondary-fixed": "#ffdbca",
+                    "on-secondary-container": "#4a1c00",
+                    "error-container": "#93000a",
+                    "surface-container-highest": "#243743"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {},
+            "fontFamily": {
+                    "headline": [
+                            "Inter"
+                    ],
+                    "body": [
+                            "Inter"
+                    ],
+                    "label": [
+                            "Inter"
+                    ],
+                    "mono": [
+                            "JetBrains Mono"
+                    ]
+            }
+    },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Inter', sans-serif; }
+        .font-jetbrains-mono { font-family: 'JetBrains Mono', monospace; }
+        .bg-glass { background-color: rgba(2, 21, 32, 0.7); backdrop-filter: blur(20px); }
+        .ambient-shadow { box-shadow: 0 20px 40px rgba(2, 21, 32, 0.08); }
+    </style>
+</head>
+<body class="bg-background text-on-background min-h-screen flex flex-col">
+<!-- TopNavBar -->
+<nav class="bg-slate-950/70 backdrop-blur-xl docked full-width top-0 sticky z-50">
+<div class="flex justify-between items-center w-full px-8 py-4 max-w-screen-2xl mx-auto">
+<div class="flex items-center gap-8">
+<a class="text-2xl font-black tracking-tighter text-white uppercase font-inter tracking-tight" href="#">DevTerminal</a>
+<div class="hidden md:flex gap-6">
+<a class="text-white border-b-2 border-lime-500 pb-1 font-inter tracking-tight hover:bg-white/5 transition-all scale-95 duration-150 ease-in-out" href="#">Articles</a>
+<a class="text-slate-400 font-medium hover:text-white transition-colors font-inter tracking-tight hover:bg-white/5 transition-all scale-95 duration-150 ease-in-out" href="#">Tutorials</a>
+<a class="text-slate-400 font-medium hover:text-white transition-colors font-inter tracking-tight hover:bg-white/5 transition-all scale-95 duration-150 ease-in-out" href="#">Library</a>
+<a class="text-slate-400 font-medium hover:text-white transition-colors font-inter tracking-tight hover:bg-white/5 transition-all scale-95 duration-150 ease-in-out" href="#">Manifesto</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-lime-500 dark:text-lime-400 hover:bg-white/5 transition-all scale-95 duration-150 ease-in-out p-2 rounded-full">
+<span class="material-symbols-outlined">search</span>
+</button>
+<button class="text-lime-500 dark:text-lime-400 hover:bg-white/5 transition-all scale-95 duration-150 ease-in-out p-2 rounded-full">
+<span class="material-symbols-outlined">account_circle</span>
+</button>
+</div>
+</div>
+</nav>
+<div class="flex flex-1 max-w-screen-2xl mx-auto w-full">
+<!-- SideNavBar -->
+<aside class="bg-[#0e222d] dark:bg-[#0e222d] h-screen w-64 rounded-r-2xl hidden lg:flex flex-col gap-4 p-6 fixed left-0 top-20 z-40 overflow-y-auto">
+<div class="mb-8">
+<h2 class="text-lime-400 font-bold font-jetbrains-mono text-sm uppercase tracking-widest mb-1">Categories</h2>
+<p class="text-slate-500 text-xs font-jetbrains-mono uppercase tracking-widest">Filter by technology</p>
+</div>
+<nav class="flex flex-col gap-2">
+<a class="text-slate-400 hover:text-white hover:bg-slate-800/50 hover:translate-x-1 transition-transform cubic-bezier(0.4,0,0.2,1) duration-150 flex items-center gap-3 p-3 rounded-lg font-jetbrains-mono text-sm uppercase tracking-widest" href="#">
+<span class="material-symbols-outlined">speed</span> Latest
+                </a>
+<a class="bg-lime-500 text-slate-950 rounded-lg font-bold hover:translate-x-1 transition-transform cubic-bezier(0.4,0,0.2,1) duration-150 flex items-center gap-3 p-3 font-jetbrains-mono text-sm uppercase tracking-widest" href="#">
+<span class="material-symbols-outlined">bolt</span> Trending
+                </a>
+<a class="text-slate-400 hover:text-white hover:bg-slate-800/50 hover:translate-x-1 transition-transform cubic-bezier(0.4,0,0.2,1) duration-150 flex items-center gap-3 p-3 rounded-lg font-jetbrains-mono text-sm uppercase tracking-widest" href="#">
+<span class="material-symbols-outlined">database</span> Back-end
+                </a>
+<a class="text-slate-400 hover:text-white hover:bg-slate-800/50 hover:translate-x-1 transition-transform cubic-bezier(0.4,0,0.2,1) duration-150 flex items-center gap-3 p-3 rounded-lg font-jetbrains-mono text-sm uppercase tracking-widest" href="#">
+<span class="material-symbols-outlined">terminal</span> Front-end
+                </a>
+<a class="text-slate-400 hover:text-white hover:bg-slate-800/50 hover:translate-x-1 transition-transform cubic-bezier(0.4,0,0.2,1) duration-150 flex items-center gap-3 p-3 rounded-lg font-jetbrains-mono text-sm uppercase tracking-widest" href="#">
+<span class="material-symbols-outlined">cloud</span> DevOps
+                </a>
+</nav>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 lg:ml-64 px-4 sm:px-8 py-12 lg:py-20 flex justify-center gap-12 relative">
+<!-- Article Container (The Matter) -->
+<article class="w-full max-w-[750px] bg-white rounded-xl text-slate-900 ambient-shadow p-6 sm:p-12 xl:p-16 relative">
+<!-- Breadcrumbs & Meta -->
+<header class="mb-12">
+<nav class="flex items-center gap-2 text-slate-500 font-jetbrains-mono text-xs uppercase tracking-wider mb-6">
+<a class="hover:text-primary transition-colors" href="#">Home</a>
+<span class="material-symbols-outlined text-[16px]">chevron_right</span>
+<a class="hover:text-primary transition-colors" href="#">Articles</a>
+<span class="material-symbols-outlined text-[16px]">chevron_right</span>
+<span class="text-slate-800 font-semibold">Architecture</span>
+</nav>
+<h1 class="text-[3.5rem] leading-[1.1] font-headline font-extrabold tracking-[-0.02em] text-slate-950 mb-6">Building Resilient Distributed Systems</h1>
+<div class="flex items-center justify-between border-b border-slate-200/60 pb-8">
+<div class="flex items-center gap-4">
+<img alt="Author avatar" class="w-12 h-12 rounded-full object-cover" data-alt="Portrait of a male developer with glasses looking directly at the camera, soft lighting, tech office background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAzEj_wZj-rrZhquX07xs6nBPzAnRvPqRd3b2kAeCTHSK2-nYnEjC2mLTdyVj_v6B5ysgrE0mXk8CRQqOHx36XdZFJr51t84gNGFWqG6HYXFuD3Gfhvkry5qHgUvNHoBdiiENqgt9Du4MyicUraV2GMsRjRKy1pNzWO9QdUOh8HcHWs7lsyHbovuUEejgV4DJfMQNN-y_eOkOP761r3G60-Blu9WW_PMJV0tg1jEp5rh1mdBdfWrB8SAurJ5pHPPnAYF_Shh5bl9hg"/>
+<div>
+<p class="font-headline font-bold text-slate-900">Alex Chen</p>
+<p class="font-jetbrains-mono text-xs text-slate-500">Oct 24, 2024 • 12 min read</p>
+</div>
+</div>
+<div class="flex gap-2">
+<button class="w-10 h-10 rounded-full flex items-center justify-center border border-slate-200 text-slate-500 hover:border-primary hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[20px]">bookmark</span>
+</button>
+<button class="w-10 h-10 rounded-full flex items-center justify-center border border-slate-200 text-slate-500 hover:border-primary hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[20px]">share</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Featured Image -->
+<figure class="mb-12 rounded-xl overflow-hidden shadow-lg border border-slate-100">
+<img alt="Server room racks" class="w-full h-auto" data-alt="Abstract view of modern server racks in a data center with blue and pink neon lighting, high contrast, clean technical aesthetic" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCSCsivSAvB10kDVbb7LwiYkHYJkIIuMAgX_1SChumeCk55W306sBidbDmU11MWByybeio3-2S1O7aUzMEL5OxlzNvcJrXHUqfK7zvlNNPdx3Eehfp5nDwrqjvxAqFZYjL7pDePMFJRzT9-9IZuaYR1yo_EGKPbb8BcdOvMfG22wTz482I9D9Satad6uOnI_pDxeP64RYjSqKsJr_hkC9Aa8jZCvejHGttko1Y_xcNOLKZgSNxPwj0gecncEP8u9F_i-lh6atgFY0c"/>
+<figcaption class="p-3 bg-slate-50 font-jetbrains-mono text-xs text-slate-500 text-center border-t border-slate-100">Modern data centers demand fault-tolerant architectures.</figcaption>
+</figure>
+<!-- Article Body -->
+<div class="prose prose-lg prose-slate max-w-none font-body text-base leading-[1.8] text-slate-700">
+<p class="text-xl leading-relaxed text-slate-800 font-medium mb-8">
+                        The shift from monolithic architectures to microservices has undeniably accelerated development velocity. However, this architectural evolution introduces a new class of problems: partial failures in distributed systems. When network partitions occur, how does your system respond?
+                    </p>
+<h2 class="text-2xl font-bold text-slate-900 mt-12 mb-6 font-headline tracking-tight" id="the-fallacy">The Fallacies of Distributed Computing</h2>
+<p class="mb-6">
+                        Before designing a resilient system, we must acknowledge the inherent chaos of the network. The eight fallacies of distributed computing, originally coined by L. Peter Deutsch, remain painfully relevant today.
+                    </p>
+<ul class="list-disc pl-6 mb-8 space-y-2">
+<li>The network is reliable.</li>
+<li>Latency is zero.</li>
+<li>Bandwidth is infinite.</li>
+<li>The network is secure.</li>
+</ul>
+<h2 class="text-2xl font-bold text-slate-900 mt-12 mb-6 font-headline tracking-tight" id="circuit-breakers">Implementing Circuit Breakers</h2>
+<p class="mb-6">
+                        A circuit breaker prevents an application from repeatedly trying to execute an operation that's likely to fail. It's a fundamental pattern for preventing cascading failures across service boundaries.
+                    </p>
+<!-- Code Block -->
+<div class="my-10 rounded-xl overflow-hidden bg-[#0f172a] shadow-xl relative group">
+<div class="flex items-center justify-between px-4 py-2 bg-[#1e293b] border-b border-[#334155]">
+<span class="font-jetbrains-mono text-xs text-slate-400">CircuitBreaker.ts</span>
+<div class="flex items-center gap-3">
+<span class="font-jetbrains-mono text-[10px] uppercase text-primary border border-primary/30 px-2 py-0.5 rounded">TypeScript</span>
+<button class="text-slate-400 hover:text-white transition-colors opacity-0 group-hover:opacity-100 flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">content_copy</span>
+<span class="font-jetbrains-mono text-xs">Copy</span>
+</button>
+</div>
+</div>
+<pre class="p-6 overflow-x-auto"><code class="font-jetbrains-mono text-sm text-[#e2e8f0] leading-relaxed"><span class="text-[#38bdf8]">class</span> <span class="text-[#facc15]">CircuitBreaker</span> {
+  <span class="text-[#38bdf8]">private</span> state: <span class="text-[#22c55e]">'CLOSED'</span> | <span class="text-[#22c55e]">'OPEN'</span> | <span class="text-[#22c55e]">'HALF_OPEN'</span> = <span class="text-[#22c55e]">'CLOSED'</span>;
+  <span class="text-[#38bdf8]">private</span> failureThreshold: <span class="text-[#38bdf8]">number</span> = <span class="text-[#facc15]">5</span>;
+  <span class="text-[#38bdf8]">private</span> failureCount: <span class="text-[#38bdf8]">number</span> = <span class="text-[#facc15]">0</span>;
+  <span class="text-[#38bdf8]">private</span> resetTimeout: <span class="text-[#38bdf8]">number</span> = <span class="text-[#facc15]">30000</span>; <span class="text-[#64748b]">// 30 seconds</span>
+
+  <span class="text-[#38bdf8]">async</span> <span class="text-[#38bdf8]">execute</span>&lt;T&gt;(action: () =&gt; Promise&lt;T&gt;): Promise&lt;T&gt; {
+    <span class="text-[#38bdf8]">if</span> (<span class="text-[#38bdf8]">this</span>.state === <span class="text-[#22c55e]">'OPEN'</span>) {
+      <span class="text-[#38bdf8]">throw</span> <span class="text-[#38bdf8]">new</span> <span class="text-[#facc15]">Error</span>(<span class="text-[#22c55e]">'Circuit breaker is OPEN'</span>);
+    }
+
+    <span class="text-[#38bdf8]">try</span> {
+      <span class="text-[#38bdf8]">const</span> result = <span class="text-[#38bdf8]">await</span> <span class="text-[#38bdf8]">action</span>();
+      <span class="text-[#38bdf8]">this</span>.<span class="text-[#38bdf8]">reset</span>();
+      <span class="text-[#38bdf8]">return</span> result;
+    } <span class="text-[#38bdf8]">catch</span> (error) {
+      <span class="text-[#38bdf8]">this</span>.<span class="text-[#38bdf8]">recordFailure</span>();
+      <span class="text-[#38bdf8]">throw</span> error;
+    }
+  }
+}</code></pre>
+</div>
+<p class="mb-6">
+                        By wrapping vulnerable external calls in a circuit breaker, we ensure that a degraded downstream service doesn't exhaust the resources of the caller.
+                    </p>
+<blockquote class="border-l-4 border-primary-container pl-6 py-2 my-8 bg-slate-50 italic text-slate-700">
+                        "Embrace failure. Design your systems not to avoid failure, but to recover from it quickly and gracefully."
+                    </blockquote>
+</div>
+</article>
+<!-- Sticky Table of Contents (Right Side) -->
+<aside class="hidden xl:block w-64 shrink-0">
+<div class="sticky top-32 bg-surface-container rounded-xl p-6 border border-white/5">
+<h3 class="font-jetbrains-mono text-xs uppercase tracking-widest text-slate-400 mb-6 border-b border-white/10 pb-3">On This Page</h3>
+<nav class="flex flex-col gap-3">
+<a class="text-sm font-medium text-lime-400 hover:text-lime-300 transition-colors" href="#the-fallacy">The Fallacies</a>
+<a class="text-sm font-medium text-slate-400 hover:text-white transition-colors pl-4 border-l border-slate-700" href="#circuit-breakers">Circuit Breakers</a>
+<a class="text-sm font-medium text-slate-400 hover:text-white transition-colors pl-4 border-l border-slate-700" href="#retries">Retry Strategies</a>
+<a class="text-sm font-medium text-slate-400 hover:text-white transition-colors pl-4 border-l border-slate-700" href="#bulkheads">Bulkhead Pattern</a>
+<a class="text-sm font-medium text-slate-400 hover:text-white transition-colors" href="#conclusion">Conclusion</a>
+</nav>
+</div>
+</aside>
+</main>
+</div>
+<!-- Footer -->
+<footer class="bg-[#0e222d] dark:bg-[#0e222d] full-width border-t-0 mt-20 w-full py-12 px-8 flex flex-col md:flex-row justify-between items-center border-t border-white/5 tonal-shift background-shift flat">
+<div class="mb-4 md:mb-0">
+<span class="text-white font-bold font-jetbrains-mono text-xs uppercase">DevTerminal</span>
+<p class="text-slate-400 mt-2 font-jetbrains-mono text-xs uppercase">© 2024 DevTerminal. Built for the void.</p>
+</div>
+<div class="flex gap-6">
+<a class="text-slate-500 hover:text-white hover:underline opacity-80 hover:opacity-100 transition-opacity font-jetbrains-mono text-xs uppercase" href="#">Privacy</a>
+<a class="text-slate-500 hover:text-white hover:underline opacity-80 hover:opacity-100 transition-opacity font-jetbrains-mono text-xs uppercase" href="#">Changelog</a>
+<a class="text-slate-500 hover:text-white hover:underline opacity-80 hover:opacity-100 transition-opacity font-jetbrains-mono text-xs uppercase" href="#">Documentation</a>
+<a class="text-slate-500 hover:text-white hover:underline opacity-80 hover:opacity-100 transition-opacity font-jetbrains-mono text-xs uppercase" href="#">Status</a>
+</div>
+</footer>
+</body></html>

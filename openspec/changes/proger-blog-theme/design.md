@@ -33,26 +33,27 @@ WP 6.9 повністю підтримує **block themes** (Site Editor), `them
 - Суто класична тема (`index.php` + template hierarchy): простіша для початку, але втрачаємо Site Editor, block pattern UX, дизайн-токени ядра; поганий forward-compat.
 - Суто block theme без PHP: неможливо реєструвати custom blocks і Interactivity-stores елегантно.
 
-### D2. Design tokens: stitch → theme.json + SCSS через generator
-**Рішення**: окремий Node-скрипт `scripts/sync-tokens.mjs` читає канонічний `design-tokens.json` (експортований зі stitch MCP), генерує:
-- `theme.json` (секції `settings.color.palette`, `settings.typography.fontFamilies`, `settings.typography.fontSizes`, `settings.spacing`, `styles.*`);
-- `src/styles/_tokens.scss` (SCSS-змінні `$color-*`, `$space-*`, `$fs-*`);
-- `src/styles/_tokens.css` (CSS custom properties `--proger-color-*`, `--proger-space-*` як рантайм-шар для Interactivity-компонент).
+### D2. Design tokens: stitch → theme.json + Tailwind config через generator
+**Рішення**: канонічний `design-tokens.json` (експортований зі Stitch MCP-проєкту `projects/3838541024378760534` "The Illuminated Terminal") — джерело правди. Скрипт `scripts/sync-tokens.mjs` генерує:
+- `theme.json` (секції `settings.color.palette`, `settings.typography.*`, `settings.spacing`, `styles.*`) для Site Editor;
+- `src/styles/tokens-root.css` з `:root { --proger-color-*: ...; }` для runtime-доступу з блокових SCSS і inline-styles;
+- `tailwind.config.js` — **не генерується**, читає `design-tokens.json` напряму через `require()`, завдяки чому Tailwind автоматично знає про нові токени без додаткового build-step.
 
-**Чому так**: уникаємо дрейфу токенів між theme.json і SCSS; stitch — єдине джерело; розробник не переписує `theme.json` вручну. Один commit на оновлення токенів.
+**Чому так**: уникаємо дрейфу токенів між theme.json і Tailwind/CSS; Stitch — єдине джерело; розробник не переписує `theme.json` вручну. Tailwind отримує кольори (`extend.colors`), font-families, radii, shadows, breakpoints, transition timing через єдиний import.
 
 **Альтернативи**:
-- Ручне ведення `theme.json` + `_tokens.scss`: гарантує drift через кілька місяців.
+- Ручне ведення `theme.json` + `tailwind.config.js`: гарантує drift через кілька місяців.
 - Style Dictionary: надлишкова залежність для 6 категорій токенів.
 
-### D3. Build pipeline: `@wordpress/scripts`
-**Рішення**: `package.json` із `@wordpress/scripts` як єдиним build-пакетом; команди `wp-scripts start`, `wp-scripts build`, `wp-scripts lint:js`. Додаємо власну `webpack.config.js` лише для розширення (SCSS loader вмикаємо через офіційний рецепт `@wordpress/scripts` SCSS preset).
+### D3. Build pipeline: `@wordpress/scripts` + Tailwind CSS (локально, не CDN)
+**Рішення**: `@wordpress/scripts` як build-пакет; `Tailwind CSS 3.4` інтегрований через `postcss.config.js` (plugins: `tailwindcss`, `autoprefixer`). Entry `src/styles/main.css` містить `@tailwind base/components/utilities` + `@layer components` для власних composite-класів (`.side-link`, `.card-matter`, `.prose-matter`). Tailwind content-paths — `templates/`, `parts/`, `patterns/`, `inc/`, `src/**/*.js`, `functions.php`.
 
-**Чому так**: `@wordpress/scripts` уже знає про `block.json`, генерує коректні `asset.php` з хешами версій для `wp_enqueue_*`, підтримує viewScriptModule для Interactivity. SCSS преcompiles через офіційний preset (плагіни `sass-loader` + `css-loader` ядром пакета).
+**Чому так**: Stitch HTML-шаблон побудований на Tailwind — найшвидший шлях до exact visual match. Native Tailwind CLI (не CDN) тримає production-bundle маленьким (JIT + purge). Складні dynamic-state стилі (scroll-spy `is-active` з брендовим лівим border, copy-state feedback) залишаються у `.scss` файлах блоків через CSS custom properties з `tokens-root.css`.
 
 **Альтернативи**:
-- Власний webpack: більше boilerplate, ризик розійтися з рекомендаціями WP.
-- Vite: прекрасний DX, але інтеграція з WP blocks потребує сторонніх плагінів.
+- Pure SCSS + BEM: 3-4× більше коду для відтворення шаблона, drift від дизайну.
+- Tailwind CDN: швидко, але production-забанений (Tailwind docs прямо це забороняє) і не purge'ується.
+- Vanilla CSS + custom properties: ще більше ручного коду.
 
 ### D4. Interactivity API v2 для клієнтського стану
 **Рішення**: Всю клієнтську інтерактивність пишемо через `@wordpress/interactivity`:
