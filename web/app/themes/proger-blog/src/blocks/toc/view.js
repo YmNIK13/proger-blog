@@ -22,6 +22,11 @@ store('proger/toc', {
 				behavior: prefersReduced() ? 'auto' : 'smooth',
 			});
 
+			const floatingToc = ref.closest('.single-floating-toc');
+			if (floatingToc instanceof HTMLDetailsElement) {
+				floatingToc.removeAttribute('open');
+			}
+
 			history.replaceState(null, '', `#${targetSlug}`);
 			const prev = target.getAttribute('tabindex');
 			target.setAttribute('tabindex', '-1');
@@ -35,6 +40,36 @@ store('proger/toc', {
 		init() {
 			const { ref } = getElement();
 			const links = Array.from(ref.querySelectorAll('.toc__link'));
+			const floatingToc = ref.closest('.single-floating-toc');
+
+			if (floatingToc instanceof HTMLDetailsElement) {
+				const closeFloatingToc = () => floatingToc.removeAttribute('open');
+
+				if (!floatingToc.dataset.tocBound) {
+					floatingToc.dataset.tocBound = 'true';
+
+					floatingToc.addEventListener('click', (event) => {
+						const closeTarget =
+							event.target instanceof Element
+								? event.target.closest('[data-toc-close]')
+								: null;
+
+						if (!closeTarget || !floatingToc.contains(closeTarget)) {
+							return;
+						}
+
+						event.preventDefault();
+						closeFloatingToc();
+					});
+
+					document.addEventListener('keydown', (event) => {
+						if (event.key === 'Escape') {
+							closeFloatingToc();
+						}
+					});
+				}
+			}
+
 			if (!links.length || !('IntersectionObserver' in window)) return;
 
 			const slugToLink = new Map(

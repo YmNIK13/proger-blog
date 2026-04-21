@@ -5,8 +5,9 @@
 	font-size: 0.875rem;
 	line-height: 1.6;
 	background-color: var(--proger-color-code-bg, #0f172a);
-	color: var(--proger-color-code-text, #e2e8f0);
+	color: var(--proger-color-primary-fixed, #acf847);
 	border: 0;
 	padding: 1rem;
 	border-radius: 0 0 0.75rem 0.75rem;
+	text-shadow: 0 0 12px rgb(158 233 57 / 10%);
 }

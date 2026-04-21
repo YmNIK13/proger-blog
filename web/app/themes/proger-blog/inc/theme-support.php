@@ -26,7 +26,6 @@ add_action('after_setup_theme', static function (): void {
 	]);
 	add_theme_support('responsive-embeds');
 	add_theme_support('align-wide');
-	add_theme_support('editor-styles');
 	add_theme_support('wp-block-styles');
 	add_theme_support('custom-logo', [
 		'height'               => 64,
@@ -36,13 +35,12 @@ add_action('after_setup_theme', static function (): void {
 		'unlink-homepage-logo' => false,
 	]);
 
-	add_editor_style('build/main.css');
-
 	add_image_size('proger-card', 640, 360, true);
 	add_image_size('proger-hero', 1600, 900, true);
 
 	register_nav_menus([
 		'primary' => __('Primary menu', 'proger-blog'),
+		'sidebar' => __('Sidebar menu', 'proger-blog'),
 	]);
 });
 

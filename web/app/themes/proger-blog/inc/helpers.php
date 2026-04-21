@@ -42,12 +42,24 @@ function proger_blog_icon(string $icon, string $classes = '', array $attrs = [])
 }
 
 /**
+ * Normalize imported text fragments so previews wrap like regular prose.
+ */
+function proger_blog_normalize_preview_text(string $text): string {
+	$text = wp_strip_all_tags($text);
+	$text = html_entity_decode($text, ENT_QUOTES | ENT_HTML5, get_bloginfo('charset') ?: 'UTF-8');
+	$text = preg_replace('/[\x{00A0}\x{1680}\x{180E}\x{2000}-\x{200D}\x{202F}\x{205F}\x{2060}\x{3000}\x{FEFF}]+/u', ' ', $text) ?? $text;
+	$text = preg_replace('/\s+/u', ' ', $text) ?? $text;
+
+	return trim($text);
+}
+
+/**
  * Render the white "matter" article card for a post.
  */
 function proger_blog_render_article_card(int $post_id): void {
 	$permalink = get_permalink($post_id);
 	$title     = get_the_title($post_id);
-	$excerpt   = get_the_excerpt($post_id);
+	$excerpt   = proger_blog_normalize_preview_text((string) get_the_excerpt($post_id));
 	$date      = get_the_date('M j, Y', $post_id);
 	$tags      = get_the_tags($post_id);
 	$cats      = get_the_category($post_id);
@@ -68,17 +80,17 @@ function proger_blog_render_article_card(int $post_id): void {
 					</a>
 				<?php endforeach; endif; ?>
 			</div>
-			<span class="text-xs font-mono text-outline whitespace-nowrap"><?php echo esc_html($date); ?></span>
+			<span class="text-xs font-mono text-slate-500 whitespace-nowrap"><?php echo esc_html($date); ?></span>
 		</div>
 
-		<h3 class="text-2xl font-bold font-headline tracking-tight text-surface mb-3 group-hover:text-primary-container transition-colors leading-tight">
+		<h3 class="text-2xl font-bold font-headline tracking-tight text-slate-950 mb-3 group-hover:text-primary-container transition-colors leading-tight">
 			<a href="<?php echo esc_url($permalink); ?>" class="no-underline hover:text-primary-container">
 				<?php echo esc_html($title); ?>
 			</a>
 		</h3>
 
 		<?php if ($excerpt) : ?>
-			<p class="text-on-surface-variant font-body mb-6 flex-1 leading-relaxed">
+			<p class="text-slate-700 font-body mb-6 flex-1 leading-relaxed break-words">
 				<?php echo esc_html(wp_trim_words($excerpt, 28, '…')); ?>
 			</p>
 		<?php endif; ?>
@@ -137,6 +149,97 @@ function proger_blog_extract_code_preview(int $post_id, int $max_lines = 5): ?ar
 }
 
 /**
+ * Extract the normalized first word from a sidebar label for icon matching.
+ */
+function proger_blog_sidebar_icon_key(string $label): string {
+	$label = trim(wp_strip_all_tags($label));
+	if ('' === $label) {
+		return '';
+	}
+
+	$words = preg_split('/\s+/u', $label) ?: [];
+	$key   = $words[0] ?? '';
+	$key   = preg_replace('/^[^\p{L}\p{N}-]+|[^\p{L}\p{N}-]+$/u', '', $key) ?? $key;
+
+	if (function_exists('mb_strtolower')) {
+		return mb_strtolower($key, 'UTF-8');
+	}
+
+	return strtolower($key);
+}
+
+/**
+ * Resolve a Material Symbol icon name for a sidebar item label.
+ */
+function proger_blog_sidebar_icon_name(string $label): string {
+	static $icons = [
+		'latest'    => 'speed',
+		'trending'  => 'bolt',
+		'back-end'  => 'database',
+		'backend'   => 'database',
+		'front-end' => 'terminal',
+		'frontend'  => 'terminal',
+		'devops'    => 'cloud',
+		'db'        => 'database',
+		'git'       => 'commit',
+		'lang'      => 'translate',
+		'phpstorm'  => 'code',
+		'server'    => 'dns',
+		'ubuntu'    => 'terminal',
+		'wordpress' => 'language',
+		'tutorials' => 'school',
+	];
+
+	$key = proger_blog_sidebar_icon_key($label);
+
+	return $icons[$key] ?? 'tag';
+}
+
+/**
+ * Render a sidebar nav link with an auto-detected icon.
+ */
+function proger_blog_render_sidebar_link(
+	string $label,
+	string $url,
+	bool $is_current = false,
+	array $attrs = []
+): string {
+	$attributes = array_merge(
+		[
+			'class' => trim('side-link' . ($is_current ? ' is-active' : '')),
+			'href'  => esc_url($url),
+		],
+		$attrs
+	);
+
+	if ($is_current) {
+		$attributes['aria-current'] = 'page';
+	}
+
+	$parts = [];
+	foreach ($attributes as $name => $value) {
+		if (null === $value || false === $value || '' === $value) {
+			continue;
+		}
+
+		if (true === $value) {
+			$parts[] = esc_attr((string) $name);
+			continue;
+		}
+
+		$escaped_value = 'href' === $name ? esc_url((string) $value) : esc_attr((string) $value);
+		$parts[]       = sprintf('%s="%s"', esc_attr((string) $name), $escaped_value);
+	}
+
+	return sprintf(
+		'<a %s>%s%s</a>',
+		implode(' ', $parts),
+		proger_blog_icon(proger_blog_sidebar_icon_name($label)),
+		esc_html($label)
+	);
+}
+
+/**
  * Fallback menu rendered when no `primary` menu is assigned — lets users see
  * something clickable before they configure Appearance → Menus.
  */
@@ -164,6 +267,49 @@ function proger_blog_fallback_menu(): void {
 }
 
 /**
+ * Fallback sidebar menu rendered until a dedicated sidebar menu is assigned.
+ */
+function proger_blog_sidebar_fallback_menu(mixed $args = null): void {
+	$active_term = is_category() ? get_queried_object() : null;
+	$active_id   = ($active_term instanceof WP_Term) ? (int) $active_term->term_id : null;
+
+	$terms = get_categories([
+		'hide_empty' => true,
+		'orderby'    => 'name',
+		'parent'     => 0,
+	]);
+
+	if (empty($terms)) {
+		return;
+	}
+
+	echo '<ul class="flex flex-col gap-2 list-none m-0 p-0">';
+	echo '<li>';
+	echo proger_blog_render_sidebar_link(
+		__('Latest', 'proger-blog'),
+		home_url('/'),
+		is_home() || is_front_page()
+	);
+	echo '</li>';
+
+	foreach ($terms as $term) {
+		echo '<li>';
+		echo proger_blog_render_sidebar_link(
+			$term->name,
+			(string) get_term_link($term),
+			$active_id === (int) $term->term_id,
+			[
+				'data-slug'     => $term->slug,
+				'data-icon-key' => proger_blog_sidebar_icon_key($term->name),
+			]
+		);
+		echo '</li>';
+	}
+
+	echo '</ul>';
+}
+
+/**
  * Navigation walker that emits Tailwind-styled links matching the Stitch template.
  */
 if (! class_exists('Proger_Blog_Nav_Walker')) {
@@ -187,6 +333,43 @@ if (! class_exists('Proger_Blog_Nav_Walker')) {
 
 		public function end_el(&$output, $item, $depth = 0, $args = null) {
 			// start_el outputs full <li>…</li>, nothing to close here.
+		}
+	}
+}
+
+/**
+ * Navigation walker for the styled sidebar menu with auto-detected icons.
+ */
+if (! class_exists('Proger_Blog_Sidebar_Nav_Walker')) {
+	class Proger_Blog_Sidebar_Nav_Walker extends Walker_Nav_Menu {
+		public function start_el(&$output, $item, $depth = 0, $args = null, $id = 0) {
+			$classes = (array) ($item->classes ?? []);
+			$current_classes = [
+				'current-menu-item',
+				'current-menu-parent',
+				'current-menu-ancestor',
+				'current_page_item',
+				'current_page_parent',
+				'current_page_ancestor',
+			];
+
+			$is_current = [] !== array_intersect($current_classes, $classes);
+
+			$output .= sprintf(
+				'<li>%s</li>',
+				proger_blog_render_sidebar_link(
+					(string) $item->title,
+					(string) $item->url,
+					$is_current,
+					[
+						'data-icon-key' => proger_blog_sidebar_icon_key((string) $item->title),
+					]
+				)
+			);
+		}
+
+		public function end_el(&$output, $item, $depth = 0, $args = null) {
+			// start_el outputs the full list item.
 		}
 	}
 }

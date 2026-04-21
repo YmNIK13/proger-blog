@@ -12,7 +12,7 @@
 	<link rel="profile" href="https://gmpg.org/xfn/11">
 	<?php wp_head(); ?>
 </head>
-<body <?php body_class('bg-background text-on-background min-h-screen flex flex-col antialiased'); ?>>
+<body <?php body_class('bg-background text-on-background min-h-screen flex flex-col antialiased overflow-x-hidden'); ?>>
 <?php wp_body_open(); ?>
 
 <a class="skip-link" href="#main"><?php esc_html_e('Пропустити до контенту', 'proger-blog'); ?></a>
@@ -22,7 +22,7 @@
 	role="banner"
 >
 	<div class="flex items-center w-full gap-6 px-8 py-4 max-w-[1800px] mx-auto">
-		<div class="flex items-center gap-8 md:flex-1 md:justify-end">
+		<div class="flex items-center gap-8 md:flex-1 md:justify-start">
 			<?php if (has_custom_logo()) : ?>
 				<?php the_custom_logo(); ?>
 			<?php else : ?>
@@ -105,7 +105,7 @@
 
 	<div
 		id="mobile-nav-panel"
-		class="fixed inset-x-0 top-[68px] bg-surface-container p-6 border-t border-outline-variant/20 z-40"
+		class="fixed inset-x-0 top-20 bg-surface-container p-6 border-t border-outline-variant/20 z-40"
 		hidden
 		aria-label="<?php esc_attr_e('Мобільне меню', 'proger-blog'); ?>"
 	>

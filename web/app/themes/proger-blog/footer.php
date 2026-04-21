@@ -6,10 +6,10 @@
  */
 ?>
 
-<footer class="bg-surface-container w-full py-12 px-8 mt-20 border-t border-white/5 relative z-10" role="contentinfo">
+<footer class="bg-surface-container w-full py-12 px-8 mt-20 border-t border-white/5 relative z-10" style="z-index: 40;" role="contentinfo">
 	<div class="max-w-screen-2xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
 		<div class="text-white font-bold font-mono text-xs uppercase tracking-widest">
-			© <?php echo esc_html(date_i18n('Y')); ?> <?php echo esc_html(get_bloginfo('name')); ?>. <?php esc_html_e('Built for the void.', 'proger-blog'); ?>
+			© <?php echo esc_html(date_i18n('Y')); ?> <?php echo esc_html(get_bloginfo('name')); ?>.
 		</div>
 		<div class="flex gap-6 flex-wrap justify-center">
 			<?php

@@ -121,7 +121,9 @@ $wrapper_attrs = get_block_wrapper_attributes([
 <nav <?php echo $wrapper_attrs; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?> aria-label="<?php echo esc_attr($title); ?>">
 	<details class="toc__details" open>
 		<summary class="toc__summary"><?php echo esc_html($title); ?></summary>
-		<?php echo $listing; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+		<div class="toc__body">
+			<?php echo $listing; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+		</div>
 	</details>
 </nav>
 <?php if (! $toc_ld_emitted) :

@@ -68,44 +68,18 @@ function extract_headings(string $html, int $max_level = 4): array {
 }
 
 /**
- * Inject id="…" into h1–h4 that don't have one yet.
+ * Inject deterministic id="…" into h1–h4, overriding stale/manual anchors.
  */
 function inject_ids(string $content): string {
-	if ('' === trim($content) || ! class_exists('WP_HTML_Tag_Processor')) {
+	if ('' === trim($content)) {
 		return $content;
 	}
 
-	$used      = [];
-	$processor = new \WP_HTML_Tag_Processor($content);
-	$levels    = ['H1', 'H2', 'H3', 'H4'];
-
-	while ($processor->next_tag()) {
-		$tag = $processor->get_tag();
-		if (! in_array($tag, $levels, true)) {
-			continue;
-		}
-		if ($processor->get_attribute('id')) {
-			// Preserve author-defined anchors; still reserve the slug to avoid collisions later.
-			$used[(string) $processor->get_attribute('id')] = 1;
-			continue;
-		}
-
-		// We cannot read inner text from the Tag Processor, so fall back to the
-		// processor's current bookmarking to slice the source. Simpler and reliable:
-		// parse inner text via regex scoped to this tag.
-		$html_from_here = substr($content, $processor->get_updated_html() ? 0 : 0);
-		break; // We'll do regex pass below.
-	}
-
-	// Regex pass: fast enough for post content and handles nested inline tags.
 	$used = [];
 	return preg_replace_callback(
 		'#<(h[1-4])([^>]*)>(.*?)</\1>#is',
 		static function (array $m) use (&$used): string {
-			$attrs = $m[2];
-			if (preg_match('/\bid=["\'][^"\']+["\']/i', $attrs)) {
-				return $m[0];
-			}
+			$attrs = preg_replace('/\s+\bid\s*=\s*(?:"[^"]*"|\'[^\']*\'|[^\s>]+)/i', '', $m[2]) ?? $m[2];
 			$text = trim(wp_strip_all_tags($m[3]));
 			if ('' === $text) {
 				return $m[0];

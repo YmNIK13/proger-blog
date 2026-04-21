@@ -5,9 +5,10 @@
  * `wp-interactivity`, but WordPress's Script Modules API expects module IDs
  * (`@wordpress/interactivity`). Run after `wp-scripts build`.
  *
- * Only files that correspond to actual script modules are rewritten:
+ * Only theme-level script modules are rewritten here. Block view scripts are
+ * currently registered as classic viewScript assets because wp-scripts emits
+ * classic bundles that depend on window.wp.interactivity.
  *   - build/interactivity-*.asset.php
- *   - build/blocks/* /view.asset.php
  */
 
 import fs from 'node:fs';
@@ -19,7 +20,6 @@ const buildRoot = path.resolve(__dirname, '..', 'build');
 
 const MODULE_FILE_PATTERNS = [
 	/^build\/interactivity-[^/]+\.asset\.php$/,
-	/^build\/blocks\/[^/]+\/view\.asset\.php$/,
 ];
 
 function walk(dir) {

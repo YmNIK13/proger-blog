@@ -10,10 +10,12 @@ get_header(); ?>
 <div class="flex flex-1 max-w-screen-2xl mx-auto w-full relative">
 	<?php get_sidebar(); ?>
 
-	<main id="main" class="flex-1 lg:ml-64 w-full px-6 md:px-12 py-12 min-h-screen">
+	<?php $sidebar_offset = get_theme_mod('proger_enable_sidebar', true) ? ' lg:ml-64' : ''; ?>
+
+	<main id="main" class="flex-1 w-full px-6 md:px-12 py-12 min-h-screen<?php echo esc_attr($sidebar_offset); ?>">
 		<section class="mb-20 text-center max-w-3xl mx-auto mt-6">
 			<h1 class="text-5xl md:text-7xl font-black font-headline tracking-tight text-white mb-6 leading-[1.05]">
-				<?php esc_html_e('Master the', 'proger-blog'); ?><br/>
+				<?php esc_html_e('Master the', 'proger-blog'); ?>
 				<span class="text-primary"><?php esc_html_e('Machine.', 'proger-blog'); ?></span>
 			</h1>
 			<p class="text-lg md:text-xl text-on-surface-variant font-body mb-10 leading-relaxed">

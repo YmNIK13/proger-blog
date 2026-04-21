@@ -79,14 +79,28 @@ add_action('wp_enqueue_scripts', static function (): void {
 	wp_enqueue_script_module('proger-blog/nav');
 }, 20);
 
-add_action('enqueue_block_editor_assets', static function (): void {
-	$editor = read_asset('main');
-	wp_enqueue_style(
-		'proger-blog-editor',
-		PROGER_BLOG_URI . 'build/main.css',
-		[],
-		$editor['version']
-	);
+add_filter('block_editor_settings_all', static function (array $settings): array {
+	if (empty($settings['styles']) || ! is_array($settings['styles'])) {
+		return $settings;
+	}
+
+	// Keep WordPress default admin/editor chrome instead of injecting theme styles.
+	$settings['styles'] = array_values(array_filter(
+		$settings['styles'],
+		static function (mixed $style): bool {
+			if (! is_array($style)) {
+				return true;
+			}
+
+			if (! empty($style['isGlobalStyles'])) {
+				return false;
+			}
+
+			return 'theme' !== ($style['__unstableType'] ?? null);
+		}
+	));
+
+	return $settings;
 });
 
 add_filter('autoptimize_filter_js_exclude', static function (string $exclude): string {
