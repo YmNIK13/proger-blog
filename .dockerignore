@@ -2,18 +2,28 @@
 .git
 .github
 .idea
+.agents
 
 vendor
 node_modules
 docs
 openspec
 tests
+.env
+.env.*
+!.env.example
+
+web/wp
 
 web/app/cache
 web/app/debug.log
 web/app/upgrade
 web/app/upgrade-temp-backup
 web/app/uploads
+web/app/mu-plugins/bedrock-disallow-indexing
+web/app/themes/proger-blog/node_modules
+web/app/themes/proger-blog/build
+web/app/themes/twentytwentyfive
 
 docker-compose.yml
 docker-compose.loc.yml

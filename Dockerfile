@@ -1,5 +1,7 @@
 FROM leadsdoit/lara-php:8.4-dev AS development
 
+WORKDIR /app
+
 RUN install-php-extensions \
     gd \
     mysqli \
@@ -8,18 +10,20 @@ RUN install-php-extensions \
 
 FROM node:24-alpine AS assets-builder
 
-WORKDIR /build
+WORKDIR /app/web/app/themes/proger-blog
 
-COPY web/app/themes/progger-blog/package*.json ./
+COPY web/app/themes/proger-blog/package*.json web/app/themes/proger-blog/.npmrc ./
 RUN npm ci
 
-COPY web/app/themes/progger-blog ./
+COPY web/app/themes/proger-blog ./
 RUN npm run build
 
 
 FROM leadsdoit/lara-php:8.4 AS production
 
 WORKDIR /app
+
+ENV COMPOSER_ALLOW_SUPERUSER=1
 
 RUN install-php-extensions \
     gd \
@@ -29,7 +33,6 @@ RUN install-php-extensions \
 COPY composer.json composer.lock ./
 COPY config ./config
 COPY web/index.php ./web/index.php
-COPY web/app ./web/app
 COPY web/wp-config.php ./web/wp-config.php
 COPY wp-cli.yml ./
 
@@ -40,9 +43,11 @@ RUN composer install \
     --no-progress \
     --optimize-autoloader
 
-COPY --from=assets-builder /build/public /app/web/app/themes/progger-blog/public
+COPY web/app ./web/app
+COPY --from=assets-builder /app/web/app/themes/proger-blog/build ./web/app/themes/proger-blog/build
 
-RUN chown -R www-data:www-data /app
+RUN mkdir -p /app/web/app/uploads \
+    && chown -R www-data:www-data /app
 
 
 FROM nginx:alpine AS nginx-production
