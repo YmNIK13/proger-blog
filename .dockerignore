@@ -3,6 +3,7 @@
 .github
 .idea
 .agents
+.runtime
 
 vendor
 node_modules

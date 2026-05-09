@@ -9,7 +9,8 @@ services:
         ports:
             - "127.0.0.1:10301:80"
         volumes:
-            - ./web/app/:/app/web/app/:ro
+            - ./web/app/uploads:/app/web/app/uploads:ro
+            - ./web/app/cache:/app/web/app/cache:ro
         depends_on:
             wp_php:
                 condition: service_started
@@ -25,7 +26,10 @@ services:
         env_file:
             - .env
         volumes:
-            - ./web/app/:/app/web/app/
+            - ./web/app/uploads:/app/web/app/uploads
+            - ./web/app/cache:/app/web/app/cache
+            - ./web/app/languages:/app/web/app/languages
+            - ./.runtime/wp-content-root:/app/var/wp-content-root
         depends_on:
             db:
                 condition: service_healthy
@@ -41,8 +45,8 @@ services:
         ports:
             - "127.0.0.1:11301:3306"
         volumes:
-            - ./.db/data:/var/lib/mysql
-            - ./.db/dump:/dump
+            - /app/db/blog/data:/var/lib/mysql
+            - /app/db/blog/dump:/dump
         healthcheck:
             test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -u\"$$MYSQL_USER\" -p\"$$MYSQL_PASSWORD\" --silent"]
             interval: 10s

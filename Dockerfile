@@ -45,9 +45,12 @@ RUN set -eux; \
 
 COPY composer.json composer.lock ./
 COPY config ./config
+COPY docker/wp-runtime-init.sh /usr/local/bin/wp-runtime-init
 COPY web/index.php ./web/index.php
 COPY web/wp-config.php ./web/wp-config.php
 COPY wp-cli.yml ./
+
+RUN chmod +x /usr/local/bin/wp-runtime-init
 
 RUN composer install \
     --no-dev \
@@ -61,6 +64,8 @@ COPY --from=assets-builder /app/web/app/themes/proger-blog/build ./web/app/theme
 
 RUN mkdir -p /app/web/app/uploads \
     && chown -R www-data:www-data /app
+
+ENTRYPOINT ["/usr/local/bin/wp-runtime-init"]
 
 
 FROM nginx:alpine AS nginx-production

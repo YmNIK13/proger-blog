@@ -40,6 +40,7 @@ phpunit.xml
 .phpunit.result.cache
 .phpunit.cache
 .codex
+.runtime
 
 # WP-CLI
 wp-cli.local.yml
