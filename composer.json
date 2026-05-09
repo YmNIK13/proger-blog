@@ -50,6 +50,11 @@
         "roots/wordpress": "6.9.4",
         "roots/wp-config": "1.0.0",
         "vlucas/phpdotenv": "^5.5",
+        "wp-plugin/autoptimize": "^3.1.15",
+        "wp-plugin/cyrlitera": "^1.3.2",
+        "wp-plugin/wordpress-seo": "^27.4",
+        "wp-plugin/wp-optimize": "^4.5.2",
+        "wp-plugin/wp-super-cache": "^3.1",
         "wp-theme/twentytwentyfive": "^1.0"
     },
     "require-dev": {

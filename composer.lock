@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c03dfd1d5f86f478a20a276671c842e2",
+    "content-hash": "ec53497ee21743f18a03e03c6b0dbc34",
     "packages": [
         {
             "name": "composer/installers",
@@ -1023,6 +1023,161 @@
                 }
             ],
             "time": "2025-12-27T19:49:13+00:00"
+        },
+        {
+            "name": "wp-plugin/autoptimize",
+            "version": "3.1.15.1",
+            "source": {
+                "type": "svn",
+                "url": "https://plugins.svn.wordpress.org/autoptimize/",
+                "reference": "tags/3.1.15.1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://downloads.wordpress.org/plugin/autoptimize.3.1.15.1.zip"
+            },
+            "require": {
+                "composer/installers": "~1.0|~2.0"
+            },
+            "type": "wordpress-plugin",
+            "notification-url": "https://wp-packages.org/downloads",
+            "authors": [
+                {
+                    "name": "Optimizing Matters"
+                }
+            ],
+            "description": "Autoptimize speeds up your website by optimizing JS, CSS, images (incl. lazy-load), HTML and Google Fonts, asyncing JS, removing emoji cruft and more.",
+            "homepage": "https://autoptimize.com/pro/",
+            "support": {
+                "changelog": "https://wordpress.org/plugins/autoptimize/#developers",
+                "issues": "https://wordpress.org/support/plugin/autoptimize",
+                "source": "https://plugins.svn.wordpress.org/autoptimize"
+            },
+            "time": "2026-04-04T07:45:37+00:00"
+        },
+        {
+            "name": "wp-plugin/cyrlitera",
+            "version": "1.3.3",
+            "source": {
+                "type": "svn",
+                "url": "https://plugins.svn.wordpress.org/cyrlitera/",
+                "reference": "tags/1.3.3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://downloads.wordpress.org/plugin/cyrlitera.1.3.3.zip"
+            },
+            "require": {
+                "composer/installers": "~1.0|~2.0"
+            },
+            "type": "wordpress-plugin",
+            "notification-url": "https://wp-packages.org/downloads",
+            "authors": [
+                {
+                    "name": "Themeisle"
+                }
+            ],
+            "description": "Convert Cyrillic and Georgian URLs and file names to Latin. Works for all post types, pages, and terms. Custom characters, URL redirects & more.",
+            "homepage": "https://wordpress.org/plugins/cyrlitera/",
+            "support": {
+                "changelog": "https://wordpress.org/plugins/cyrlitera/#developers",
+                "issues": "https://wordpress.org/support/plugin/cyrlitera",
+                "source": "https://plugins.svn.wordpress.org/cyrlitera"
+            },
+            "time": "2026-05-07T09:21:19+00:00"
+        },
+        {
+            "name": "wp-plugin/wordpress-seo",
+            "version": "27.5",
+            "source": {
+                "type": "svn",
+                "url": "https://plugins.svn.wordpress.org/wordpress-seo/",
+                "reference": "tags/27.5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://downloads.wordpress.org/plugin/wordpress-seo.27.5.zip"
+            },
+            "require": {
+                "composer/installers": "~1.0|~2.0"
+            },
+            "type": "wordpress-plugin",
+            "notification-url": "https://wp-packages.org/downloads",
+            "authors": [
+                {
+                    "name": "Yoast"
+                }
+            ],
+            "description": "Improve your SEO with real-time feedback, schema, and clear guidance. Upgrade for AI tools, Google Docs integration, and 24/7 support, no hidden fees.",
+            "homepage": "https://yoa.st/1uj",
+            "support": {
+                "changelog": "https://wordpress.org/plugins/wordpress-seo/#developers",
+                "issues": "https://wordpress.org/support/plugin/wordpress-seo",
+                "source": "https://plugins.svn.wordpress.org/wordpress-seo"
+            },
+            "time": "2026-05-08T08:30:48+00:00"
+        },
+        {
+            "name": "wp-plugin/wp-optimize",
+            "version": "4.5.3",
+            "source": {
+                "type": "svn",
+                "url": "https://plugins.svn.wordpress.org/wp-optimize/",
+                "reference": "tags/4.5.3"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://downloads.wordpress.org/plugin/wp-optimize.4.5.3.zip"
+            },
+            "require": {
+                "composer/installers": "~1.0|~2.0"
+            },
+            "type": "wordpress-plugin",
+            "notification-url": "https://wp-packages.org/downloads",
+            "authors": [
+                {
+                    "name": "David Anderson / Team Updraft"
+                }
+            ],
+            "description": "Get caching and more with this powerful cache plugin. Cache, optimize images, clean your database and minify for maximum performance.",
+            "homepage": "https://teamupdraft.com/wp-optimize",
+            "support": {
+                "changelog": "https://wordpress.org/plugins/wp-optimize/#developers",
+                "issues": "https://wordpress.org/support/plugin/wp-optimize",
+                "source": "https://plugins.svn.wordpress.org/wp-optimize"
+            },
+            "time": "2026-04-29T14:01:11+00:00"
+        },
+        {
+            "name": "wp-plugin/wp-super-cache",
+            "version": "3.1.0",
+            "source": {
+                "type": "svn",
+                "url": "https://plugins.svn.wordpress.org/wp-super-cache/",
+                "reference": "tags/3.1.0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://downloads.wordpress.org/plugin/wp-super-cache.3.1.0.zip"
+            },
+            "require": {
+                "composer/installers": "~1.0|~2.0"
+            },
+            "type": "wordpress-plugin",
+            "notification-url": "https://wp-packages.org/downloads",
+            "authors": [
+                {
+                    "name": "Automattic"
+                }
+            ],
+            "description": "A very fast caching engine for WordPress that produces static html files.",
+            "homepage": "https://wordpress.org/plugins/wp-super-cache/",
+            "support": {
+                "changelog": "https://wordpress.org/plugins/wp-super-cache/#developers",
+                "issues": "https://wordpress.org/support/plugin/wp-super-cache",
+                "source": "https://plugins.svn.wordpress.org/wp-super-cache"
+            },
+            "time": "2026-04-14T15:50:51+00:00"
         },
         {
             "name": "wp-theme/twentytwentyfive",
@@ -4858,8 +5013,8 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=8.3"
+        "php": ">=8.4"
     },
     "platform-dev": {},
-    "plugin-api-version": "2.9.0"
+    "plugin-api-version": "2.6.0"
 }

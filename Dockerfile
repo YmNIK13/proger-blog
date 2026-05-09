@@ -23,12 +23,25 @@ FROM leadsdoit/lara-php:8.4 AS production
 
 WORKDIR /app
 
+ARG WWWUSER=1000
+ARG WWWGROUP=1000
+
 ENV COMPOSER_ALLOW_SUPERUSER=1
 
 RUN install-php-extensions \
     gd \
     mysqli \
     pdo_mysql
+
+RUN set -eux; \
+    current_group="$(id -g www-data)"; \
+    current_user="$(id -u www-data)"; \
+    if [ "$current_group" != "$WWWGROUP" ]; then \
+        groupmod -o -g "$WWWGROUP" www-data; \
+    fi; \
+    if [ "$current_user" != "$WWWUSER" ]; then \
+        usermod -o -u "$WWWUSER" www-data; \
+    fi
 
 COPY composer.json composer.lock ./
 COPY config ./config

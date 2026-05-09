@@ -13,7 +13,9 @@ web/app/uploads/*
 web/app/languages/*
 !web/app/uploads/.gitkeep
 web/app/cache/*
+web/app/advanced-cache.php
 web/app/advanced-headers.php
+web/app/upgrade-temp-backup/*
 web/app/wp-cache-config.php
 
 # WordPress
@@ -37,6 +39,7 @@ auth.json
 phpunit.xml
 .phpunit.result.cache
 .phpunit.cache
+.codex
 
 # WP-CLI
 wp-cli.local.yml

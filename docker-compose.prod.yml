@@ -9,7 +9,7 @@ services:
         ports:
             - "127.0.0.1:10301:80"
         volumes:
-            - ./web/app/uploads:/app/web/app/uploads
+            - ./web/app/:/app/web/app/:ro
         depends_on:
             wp_php:
                 condition: service_started
@@ -18,11 +18,14 @@ services:
         build:
             context: .
             target: production
+            args:
+                WWWUSER: ${PUID:-1000}
+                WWWGROUP: ${PGID:-1000}
         restart: unless-stopped
         env_file:
             - .env
         volumes:
-            - ./web/app/uploads:/app/web/app/uploads
+            - ./web/app/:/app/web/app/
         depends_on:
             db:
                 condition: service_healthy
