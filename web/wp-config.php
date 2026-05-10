@@ -8,6 +8,10 @@ define('RSSSL_KEY', '2odg3HH9vO2iLjjFA9I8mW9Zjwf4j8EjfxvRm9SCLRT839y1wPLXozcSA7i
  * This file is required in the root directory so WordPress can find it.
  * WP is hardcoded to look in its own directory or one directory up for wp-config.php.
  */
+if (!defined('WPCACHEHOME')) {
+    define('WPCACHEHOME', __DIR__ . '/app/plugins/wp-super-cache/');
+}
+
 require_once dirname(__DIR__) . '/vendor/autoload.php';
 require_once dirname(__DIR__) . '/config/application.php';
 require_once ABSPATH . 'wp-settings.php';
